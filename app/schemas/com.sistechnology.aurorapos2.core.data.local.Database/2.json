@@ -1,0 +1,130 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "c08e92bae6167eed78d35e6bd70abd3a",
+    "entities": [
+      {
+        "tableName": "User",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `fullName` TEXT NOT NULL, `password` TEXT NOT NULL, `loginName` TEXT NOT NULL, `userTypeId` INTEGER NOT NULL, `enabled` INTEGER NOT NULL, `dateLastEdit` TEXT NOT NULL, `policy` INTEGER NOT NULL, `expiration` INTEGER NOT NULL, `validity` INTEGER NOT NULL, `expired` INTEGER NOT NULL, `egn` TEXT NOT NULL, `phone` TEXT NOT NULL, `email` TEXT NOT NULL, `companyId` INTEGER NOT NULL, `created` TEXT NOT NULL, `ident` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "password",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loginName",
+            "columnName": "loginName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userTypeId",
+            "columnName": "userTypeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enabled",
+            "columnName": "enabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateLastEdit",
+            "columnName": "dateLastEdit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "policy",
+            "columnName": "policy",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expiration",
+            "columnName": "expiration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "validity",
+            "columnName": "validity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expired",
+            "columnName": "expired",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "egn",
+            "columnName": "egn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyId",
+            "columnName": "companyId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "created",
+            "columnName": "created",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ident",
+            "columnName": "ident",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c08e92bae6167eed78d35e6bd70abd3a')"
+    ]
+  }
+}

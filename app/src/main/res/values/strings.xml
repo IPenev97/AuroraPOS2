@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">AuroraPOS2</string>
+    <string name="title_activity_user_login">UserLoginActivity</string>
+    <string name="logout">Logout</string>
+    <string name="draw_menu">Drawer Menu</string>
+    <string name="articleImage">Article Image</string>
+    <string name="article">Article</string>
+    <string name="quantity">Quantity</string>
+    <string name="price">Price</string>
+    <string name="sum">Sum</string>
+    <string name="pay_here">Pay Here</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+    <string name="cash">Cash</string>
+    <string name="payment_type">Payment Type</string>
+    <string name="amount">Amount</string>
+    <string name="deleteIcon">Delete Icon</string>
+    <string name="change">Change</string>
+    <string name="amount_to_pay">Amount To Pay</string>
+    <string name="ok">Ok</string>
+    <string name="payment_finished">The receipt has already been payed</string>
+    <string name="receipt">Receipt</string>
+    <string name="clear_receipt_confirm">Are you sure you want to clear the current receipt?</string>
+    <string name="clear">Clear</string>
+    <string name="confirm_logout_text">Are you sure you want to logout?</string>
+    <string name="name">Name</string>
+</resources>

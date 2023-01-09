@@ -24,4 +24,8 @@
     <string name="clear">Clear</string>
     <string name="confirm_logout_text">Are you sure you want to logout?</string>
     <string name="name">Name</string>
+    <string name="total">Total</string>
+    <string name="group">Group</string>
+    <string name="edit_article_success">Changes have successfully been made</string>
+    <string name="edit_article">Edit Article</string>
 </resources>

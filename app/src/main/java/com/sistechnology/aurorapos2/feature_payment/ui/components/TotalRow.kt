@@ -16,6 +16,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sistechnology.aurorapos2.R
+import com.sistechnology.aurorapos2.core.ui.components.IconTextField
 import com.sistechnology.aurorapos2.core.utils.CurrencyAmountInputVisualTransformation
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -44,38 +46,23 @@ fun TotalRow(
     }
 
 
-    Surface( shape = RoundedCornerShape(8.dp), border = BorderStroke(4.dp, orangeColor)){
+    Surface(modifier = Modifier.padding(5.dp), shape = RoundedCornerShape(8.dp), border = BorderStroke(4.dp, orangeColor)){
         Row( modifier = Modifier
-            .padding(10.dp)
-            .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            TextField(
+            .fillMaxWidth()
+            .padding(5.dp), verticalAlignment = Alignment.CenterVertically) {
+            IconTextField(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .weight(1f),
                 value = total.toString(),
-                label = { Text(text = "Total", color = orangeColor, fontSize = 16.sp) },
-                enabled = false,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Payment,
-                        contentDescription = "Payment Icon",
-                        tint = orangeColor
-                    )
-                },
-                textStyle = TextStyle(fontSize = 25.sp, color = orangeColor),
+                label = stringResource(R.string.total),
                 onValueChange = {},
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = orangeColor,
-                    backgroundColor = orangeLightColor,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
-                shape = RoundedCornerShape(12.dp)
+                icon = Icons.Default.Payment,
+                enabled = false
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .weight(1f)
                     .offset(0.dp, -(3).dp),
                 textStyle = TextStyle(fontSize = 25.sp),

@@ -82,7 +82,6 @@ fun PaymentScreen(
                                 modifier = Modifier
                                     .fillMaxHeight()
                                     .weight(3f)
-                                    .padding(10.dp)
                             ) {
                                 Row(modifier = Modifier.weight(2f)) {
                                     TotalRow(
@@ -109,7 +108,6 @@ fun PaymentScreen(
                                 modifier = Modifier
                                     .fillMaxHeight()
                                     .weight(1f)
-                                    .padding(10.dp)
                             ) {
                                 PaymentTypesGrid(
                                     paymentTypes = paymentState.value.paymentTypeList,
@@ -136,7 +134,6 @@ fun PaymentScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
-                            .padding(10.dp)
                     ) {
 
                     }

@@ -5,10 +5,7 @@ import com.sistechnology.aurorapos2.feature_authentication.domain.repositories.U
 import com.sistechnology.aurorapos2.feature_authentication.domain.use_case.users.*
 import com.sistechnology.aurorapos2.feature_home.domain.repositories.ArticleRepository
 import com.sistechnology.aurorapos2.feature_home.domain.repositories.ReceiptRepository
-import com.sistechnology.aurorapos2.feature_home.domain.use_case.articles.ArticlesUseCases
-import com.sistechnology.aurorapos2.feature_home.domain.use_case.articles.GetArticleGroupsUseCase
-import com.sistechnology.aurorapos2.feature_home.domain.use_case.articles.GetArticlesByGroupUseCase
-import com.sistechnology.aurorapos2.feature_home.domain.use_case.articles.GetArticlesUseCase
+import com.sistechnology.aurorapos2.feature_home.domain.use_case.articles.*
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.bar_drawer.BarDrawerUseCases
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.bar_drawer.LogoutUseCase
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.receipt.GetParkedReceiptsUseCase
@@ -51,7 +48,8 @@ object UseCaseModule {
         return ArticlesUseCases(
             getArticlesUseCase = GetArticlesUseCase(articlesRepository),
             getArticleGroupsUseCase = GetArticleGroupsUseCase(articlesRepository),
-            getArticlesByGroupUseCase = GetArticlesByGroupUseCase(articlesRepository)
+            getArticlesByGroupUseCase = GetArticlesByGroupUseCase(articlesRepository),
+            getArticleInfo = GetArticleInfo(articlesRepository)
         )
     }
 

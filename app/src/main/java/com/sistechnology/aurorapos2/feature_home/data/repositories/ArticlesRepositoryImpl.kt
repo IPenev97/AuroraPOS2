@@ -6,6 +6,7 @@ import com.sistechnology.aurorapos2.feature_home.data.local.entities.article.Art
 import com.sistechnology.aurorapos2.feature_home.data.local.entities.article.ArticleGroupEntity
 import com.sistechnology.aurorapos2.feature_home.domain.models.article.Article
 import com.sistechnology.aurorapos2.feature_home.domain.models.article.ArticleGroup
+import com.sistechnology.aurorapos2.feature_home.domain.models.article.ArticleInfo
 import com.sistechnology.aurorapos2.feature_home.domain.repositories.ArticleRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -64,6 +65,10 @@ class ArticlesRepositoryImpl(
 
     override suspend fun addArticleGroup(vararg articleGroup: ArticleGroup) {
         return articleGroupDao.insertArticleGroup(*articleGroup.map{it.toEntity()}.toTypedArray())
+    }
+
+    override suspend fun editArticle(article: Article) {
+        return articleDao.insertArticle(article.toEntity())
     }
 
 

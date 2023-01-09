@@ -44,25 +44,34 @@ fun BasketBox(
         modifier = Modifier
             .clickable(onClick = { onClick() })
             .fillMaxSize()
-            .aspectRatio(1f)
+            .aspectRatio(12f / 8f)
             .padding(5.dp),
         shape = RoundedCornerShape(8.dp),
         color = if (isSelected) colorResource(id = R.color.logo_blue) else Color.LightGray
     ) {
         if (total != 0.0) {
-            Box(contentAlignment = Alignment.Center){
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center){
                 Text(
-                    text = "$total лв.",
+                    text = "$total",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
+                        fontSize = 25.sp,
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                )
+                Text(
+                    text = " лв.",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
                         color = Color.White,
                         textAlign = TextAlign.Center
                     )
                 )
             }
         } else {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center ) {
                 Image(
                     modifier = Modifier
                         .defaultMinSize(minWidth = 60.dp, minHeight = 60.dp)

@@ -20,7 +20,7 @@ fun PaymentTypesGrid(
      paymentTypes: List<PaymentType>,
      onClick: (PaymentType) -> Unit
 ) {
-    Surface(elevation = 10.dp, shape = RoundedCornerShape(8.dp) ) {
+    Surface(modifier = Modifier.padding(5.dp), elevation = 10.dp, shape = RoundedCornerShape(8.dp) ) {
         LazyColumn(modifier = Modifier.fillMaxHeight().fillMaxWidth(), horizontalAlignment = Alignment.Start){
             items(paymentTypes) { item ->
                 PaymentTypeBox(paymentType = item, onClick = {onClick(it)})

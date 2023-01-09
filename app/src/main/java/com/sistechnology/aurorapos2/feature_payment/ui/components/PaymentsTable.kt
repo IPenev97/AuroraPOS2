@@ -45,6 +45,7 @@ fun PaymentsTable(
     }
 
     Surface(
+        modifier = Modifier.padding(5.dp),
         elevation = 10.dp, shape = RoundedCornerShape(8.dp), border = BorderStroke(
             4.dp, colorResource(
                 id = R.color.logo_blue
@@ -55,7 +56,7 @@ fun PaymentsTable(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .weight(1.5f)
                     .clip(
                         RoundedCornerShape(
                             topStart = 8.dp,
@@ -69,14 +70,15 @@ fun PaymentsTable(
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(10.dp)
-                        .weight(1f),
+                        .padding(5.dp)
+                        .weight(1f)
+                        .offset(10.dp),
                     text = stringResource(id = R.string.payment_type),
                     style = textStyle.copy(textAlign = TextAlign.Start)
                 )
                 Text(
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(5.dp)
                         .offset(-(33).dp, 0.dp)
                         .weight(1f), text = stringResource(id = R.string.amount), style = textStyle
                 )
@@ -93,7 +95,7 @@ fun PaymentsTable(
                 }
             }
             Row(modifier = Modifier
-                .weight(1f)
+                .weight(1.5f)
                 .fillMaxWidth()
                 .clip(
                     RoundedCornerShape(
@@ -103,15 +105,18 @@ fun PaymentsTable(
                         bottomStart = 8.dp
                     )
                 )
-                .background(colorResource(id = R.color.logo_blue))){
+                .background(colorResource(id = R.color.logo_blue)),
+            verticalAlignment = Alignment.CenterVertically){
                 Text(modifier = Modifier
-                    .padding(10.dp)
+                    .padding(3.dp)
+                    .offset(10.dp)
                     .weight(1f), text =
                 if(isChange){stringResource(id = R.string.change)}else{
                     stringResource(id = R.string.amount_to_pay)} ,
                     style = totalTextStyle.copy(textAlign = TextAlign.Start))
                 Text(modifier = Modifier
-                    .padding(10.dp)
+                    .padding(3.dp)
+                    .offset(-(10).dp)
                     .weight(1f), text = if(isChange){(totalPayed-total).toString()} else {(total-totalPayed).toString()}, style = totalTextStyle.copy(textAlign = TextAlign.End))
             }
 

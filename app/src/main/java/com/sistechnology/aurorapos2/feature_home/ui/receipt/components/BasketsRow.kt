@@ -20,7 +20,7 @@ fun BasketsRow(
     onClick: (Int) -> Unit,
     selectedBasketIndex: Int
 ) {
-    Surface(modifier = modifier.padding(10.dp)) {
+    Surface(modifier = modifier, elevation = 8.dp) {
         LazyRow(modifier = Modifier.fillMaxSize()) {
             itemsIndexed(basketList) { index, receipt ->
                 BasketBox(receipt = receipt, total = getTotal(index), index = index, onClick = {onClick(index)}, selectedBasketIndex = selectedBasketIndex)

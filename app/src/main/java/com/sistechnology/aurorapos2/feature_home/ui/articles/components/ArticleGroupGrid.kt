@@ -19,7 +19,7 @@ fun ArticleGroupGrid(
 
     LazyHorizontalGrid(
         modifier = modifier,
-        rows = GridCells.Adaptive(minSize = 50.dp),
+        rows = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.Start,
 
 

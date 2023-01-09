@@ -3,12 +3,15 @@ package com.sistechnology.aurorapos2.feature_home.ui
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotApplyResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sistechnology.aurorapos2.core.domain.values.receipt.CurrentReceiptList
 import com.sistechnology.aurorapos2.core.ui.Screen
 import com.sistechnology.aurorapos2.feature_home.domain.models.receipt.Receipt
 import com.sistechnology.aurorapos2.feature_home.domain.models.receipt.ReceiptItem
+import com.sistechnology.aurorapos2.feature_home.domain.models.validation.ArticleValidation
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.articles.ArticlesUseCases
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.bar_drawer.BarDrawerUseCases
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.receipt.ReceiptUseCases
@@ -88,10 +91,22 @@ class HomeScreenViewModel @Inject constructor(
                 _articlesState.value = articlesState.value.copy(selectedArticleGroupId = event.id)
             }
             is ArticleEvent.SelectArticle -> {
-                _articlesState.value = articlesState.value.copy(selectedArticle = event.article)
+                viewModelScope.launch {
+                    _articlesState.value = articlesState.value.copy(
+                        selectedArticleInfo = articlesUseCase.getArticleInfo(event.article)
+                    )
+                }
             }
+            is ArticleEvent.EditArticle -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.EditArticle(articlesUseCase.editArticle(event.articleInfo)))
+                }
+            }
+
+
         }
     }
+
 
     private fun saveChangesToCurrentBasket() {
         val receiptList: List<Receipt> = _receiptState.value.receiptList
@@ -120,7 +135,8 @@ class HomeScreenViewModel @Inject constructor(
                 saveChangesToCurrentBasket()
             }
             is ReceiptEvent.PayReceipt -> {
-                CurrentReceiptList.currentReceipt = CurrentReceiptList.currentReceipt.copy(receiptItemList = _receiptItemList)
+                CurrentReceiptList.currentReceipt =
+                    CurrentReceiptList.currentReceipt.copy(receiptItemList = _receiptItemList)
                 viewModelScope.launch {
                     _eventFlow.emit(UiEvent.Navigate(Screen.PaymentScreen.route))
                 }
@@ -136,7 +152,10 @@ class HomeScreenViewModel @Inject constructor(
                 receiptList[basketIndex].receiptItemList = _receiptItemList.toList()
 
 
-                _receiptState.value = receiptState.value.copy(selectedBasketIndex = event.index, receiptList = receiptList)
+                _receiptState.value = receiptState.value.copy(
+                    selectedBasketIndex = event.index,
+                    receiptList = receiptList
+                )
 
                 _receiptItemList.clear()
                 _receiptItemList.addAll(_receiptState.value.receiptList[_receiptState.value.selectedBasketIndex].receiptItemList)
@@ -151,7 +170,8 @@ class HomeScreenViewModel @Inject constructor(
     fun increaseReceiptItemQuantity(id: Int): Boolean {
         val index = _receiptItemList.indexOfFirst { receiptItem -> receiptItem.articleId == id }
         if (index == -1) return false
-        _receiptItemList[index] = _receiptItemList[index].let { it.copy(quantity = it.quantity + 1) }
+        _receiptItemList[index] =
+            _receiptItemList[index].let { it.copy(quantity = it.quantity + 1) }
         saveChangesToCurrentBasket()
         return true
     }
@@ -159,6 +179,7 @@ class HomeScreenViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class Navigate(val route: String) : UiEvent()
+        data class EditArticle(val validation: ArticleValidation) : UiEvent()
     }
 
     private fun getArticles(groupId: Int) {
@@ -174,14 +195,19 @@ class HomeScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun parkCurrentReceipts(){
-        _receiptState.value.receiptList[receiptState.value.selectedBasketIndex].receiptItemList = _receiptItemList.toList()
+    private fun parkCurrentReceipts() {
+        _receiptState.value.receiptList[receiptState.value.selectedBasketIndex].receiptItemList =
+            _receiptItemList.toList()
         parkCurrentReceiptsJob?.cancel()
-        parkCurrentReceiptsJob = viewModelScope.launch {receiptUseCases.parkCurrentReceiptsUseCase(*_receiptState.value.receiptList.toTypedArray())}
+        parkCurrentReceiptsJob =
+            viewModelScope.launch { receiptUseCases.parkCurrentReceiptsUseCase(*_receiptState.value.receiptList.toTypedArray()) }
     }
-    private fun getParkedReceipts(){
+
+    private fun getParkedReceipts() {
         getParkedReceiptsJob?.cancel()
-        getParkedReceiptsJob = viewModelScope.launch { _receiptState.value = receiptState.value.copy(receiptList = receiptUseCases.getParkedReceiptsUseCase())
+        getParkedReceiptsJob = viewModelScope.launch {
+            _receiptState.value =
+                receiptState.value.copy(receiptList = receiptUseCases.getParkedReceiptsUseCase())
             _receiptItemList.addAll(_receiptState.value.receiptList[0].receiptItemList)
         }
 
@@ -195,7 +221,7 @@ class HomeScreenViewModel @Inject constructor(
         return total
     }
 
-    fun getCurrentBasketTotal(index: Int): Double{
+    fun getCurrentBasketTotal(index: Int): Double {
         return _receiptState.value.receiptList[index].getTotal()
     }
 

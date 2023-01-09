@@ -8,18 +8,6 @@ plugins {
 
 android {
     signingConfigs {
-        debug {
-            storeFile file('D:\\KeyStorePathsAuroraPos\\siskeystore.jks')
-            storePassword '314159'
-            keyAlias 'vanlite'
-            keyPassword '271828'
-        }
-        release {
-            storeFile file('D:\\KeyStorePathsAuroraPos\\siskeystore.jks')
-            storePassword '314159'
-            keyAlias 'vanlite'
-            keyPassword '271828'
-        }
     }
     compileSdk 33
 
@@ -29,6 +17,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -41,7 +30,6 @@ android {
                                       "$projectDir/schemas".toString()]
             }
         }
-        signingConfig signingConfigs.release
     }
 
     buildFeatures {

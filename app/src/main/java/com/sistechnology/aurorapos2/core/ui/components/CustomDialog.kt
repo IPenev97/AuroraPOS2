@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -29,7 +28,7 @@ import androidx.compose.ui.window.Dialog
 import com.sistechnology.aurorapos2.R
 
 @Composable
-fun Dialog(
+fun CustomDialog(
     cornerRadius: Dp = 12.dp,
     confirmButtonColor: Color = Color(0xFFFF0000),
     cancelButtonColor: Color = Color(0xFF35898F),

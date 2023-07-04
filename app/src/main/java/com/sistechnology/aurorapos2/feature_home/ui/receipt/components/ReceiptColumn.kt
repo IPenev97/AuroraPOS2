@@ -8,10 +8,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sistechnology.aurorapos2.R
+import com.sistechnology.aurorapos2.feature_home.domain.models.enums.DiscountType
 import com.sistechnology.aurorapos2.feature_home.domain.models.receipt.Receipt
 import com.sistechnology.aurorapos2.feature_home.domain.models.receipt.ReceiptItem
 
@@ -26,11 +29,13 @@ import com.sistechnology.aurorapos2.feature_home.domain.models.receipt.ReceiptIt
 @Composable
 fun ReceiptColumn(
     receipt: Receipt,
-    total: Double,
     modifier: Modifier,
     onItemClick: (Int, ReceiptItem) -> Unit
 ) {
     val textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)
+    val discountSign = if(receipt.discountType==DiscountType.Percent) "%" else stringResource(id = R.string.lv)
+    val discount = if(receipt.discountValue!=0.0) String.format("%s %.2f%s", stringResource(id = R.string.discount),receipt.discountValue, discountSign) else ""
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -58,7 +63,7 @@ fun ReceiptColumn(
                     text = stringResource(id = R.string.article),
                     modifier = Modifier
                         .weight(3f)
-                        .padding(10.dp),
+                        .offset(10.dp),
                     style = textStyle
                 )
                 Text(
@@ -67,13 +72,25 @@ fun ReceiptColumn(
                     style = textStyle
                 )
                 Text(
+                    text = "",
+                    modifier = Modifier.weight(1f),
+                    style = textStyle
+                )
+                Text(
                     text = stringResource(id = R.string.price),
                     modifier = Modifier.weight(2f),
                     style = textStyle
                 )
                 Text(
+                    text = "",
+                    modifier = Modifier.weight(2f),
+                    style = textStyle
+                )
+                Text(
                     text = stringResource(id = R.string.sum),
-                    modifier = Modifier.weight(2f).padding(10.dp),
+                    modifier = Modifier
+                        .weight(2f)
+                        .offset(-(10).dp),
                     style = textStyle.copy(textAlign = TextAlign.End)
                 )
             }
@@ -103,12 +120,19 @@ fun ReceiptColumn(
                 verticalAlignment = Alignment.CenterVertically){
                 Text(
                     text = stringResource(id = R.string.sum),
-                    modifier = Modifier.padding(10.dp).weight(1f),
+                    modifier = Modifier
+                        .offset(10.dp)
+                        .weight(1f),
                     style = textStyle
                 )
+                Text(text = discount,
+                    modifier = Modifier.weight(1f),
+                    style = textStyle.copy(color = colorResource(id = R.color.delete_red), textAlign = TextAlign.Start))
                 Text(
-                    text = total.toString(),
-                    modifier = Modifier.padding(10.dp).weight(1f),
+                    text = String.format("%.2f", receipt.getTotal()),
+                    modifier = Modifier
+                        .offset(-(10).dp)
+                        .weight(1f),
                     style = textStyle.copy(textAlign = TextAlign.End)
                 )
             }

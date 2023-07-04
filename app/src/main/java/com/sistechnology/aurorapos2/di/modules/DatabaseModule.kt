@@ -7,9 +7,11 @@ import com.sistechnology.aurorapos2.feature_authentication.data.local.dao.UserDa
 import com.sistechnology.aurorapos2.feature_authentication.data.local.dao.UserTypeDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleGroupDao
+import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.VatGroupDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.receipt.ParkedReceiptDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.receipt.ReceiptItemDao
 import com.sistechnology.aurorapos2.feature_payment.data.local.dao.PaymentTypeDao
+import com.sistechnology.aurorapos2.feature_settings.data.local.dao.TerminalParameterDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -72,6 +74,19 @@ object DatabaseModule {
     fun provideReceiptItemDao(database: Database) : ReceiptItemDao{
         return database.receiptItemDao()
     }
+    @Singleton
+    @Provides
+    fun provideVatGroupDao(database: Database) : VatGroupDao{
+        return database.vatGroupDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideTerminalParameterDao(database: Database) : TerminalParameterDao{
+        return database.terminalParameterDao()
+    }
+
+
 
 
 }

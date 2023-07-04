@@ -11,6 +11,7 @@
     <color name="logo_orange">#eba925</color>
     <color name="dark_orange">#ae7e1d</color>
     <color name="delete_red">#D10000</color>
-    <color name="okay_button_green">#2DAD35</color>
-
+    <color name="okay_button_green">#4CBB17</color>
+    <color name="dark_blue_button">#075393</color>
+    <color name="light_blue_button">#8BBCE5</color>
 </resources>

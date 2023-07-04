@@ -5,40 +5,59 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Payment
+import androidx.compose.material.icons.filled.Print
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sistechnology.aurorapos2.R
+import com.sistechnology.aurorapos2.core.fp_comm.Fp_Error
 import com.sistechnology.aurorapos2.core.ui.components.AppBar
-import com.sistechnology.aurorapos2.core.ui.components.Dialog
+import com.sistechnology.aurorapos2.core.ui.components.CustomDialog
+import com.sistechnology.aurorapos2.core.ui.components.ProgressDialog
+import com.sistechnology.aurorapos2.feature_home.ui.HomeScreenViewModel
 import com.sistechnology.aurorapos2.feature_payment.ui.components.PaymentTypesGrid
 import com.sistechnology.aurorapos2.feature_payment.ui.components.PaymentsTable
 import com.sistechnology.aurorapos2.feature_payment.ui.components.TotalRow
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun PaymentScreen(
     navController: NavController,
-    viewModel: PaymentScreenViewModel = hiltViewModel()
+    viewModel: PaymentScreenViewModel = hiltViewModel(),
 ) {
 
     val paymentState = viewModel.paymentState
 
-    var payment by remember { mutableStateOf(paymentState.value.total.toString()) }
+    var printErrorMessage by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
-    LaunchedEffect(key1 = paymentState.value.totalPayed) {
-        val amount: Double = paymentState.value.total - paymentState.value.totalPayed
-        if (amount > 0) {
-            payment = amount.toString()
-        } else {
-            payment = "0.0"
+    LaunchedEffect(key1 = paymentState.value.errorPrintMessage){
+        when (paymentState.value.errorPrintMessage){
+            Fp_Error.NO_PAPER -> printErrorMessage = context.getString(R.string.error_printing_no_paper)
+            Fp_Error.FP_NOT_READY -> printErrorMessage = context.getString(R.string.error_printing_not_ready)
+            Fp_Error.NO_BATTERY ->  printErrorMessage = context.getString(R.string.error_printing_no_battery)
+            else -> printErrorMessage = ""
         }
-
     }
+    LaunchedEffect(key1 = true) {
+
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is HomeScreenViewModel.UiEvent.Navigate -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
+
+
+
+
+
 
 
 
@@ -49,7 +68,8 @@ fun PaymentScreen(
             AppBar(
                 onMenuDrawerClick = {},
                 onLogoutClick = { },
-                navController
+                navController = navController,
+                onSettingsClick = {}
             )
         },
         content = { padding ->
@@ -83,14 +103,21 @@ fun PaymentScreen(
                                     .fillMaxHeight()
                                     .weight(3f)
                             ) {
-                                Row(modifier = Modifier.weight(2f)) {
+                                Row(modifier = Modifier.weight(2.5f)) {
                                     TotalRow(
                                         total = paymentState.value.total,
-                                        payment,
-                                        onPaymentChange = { payment = it })
+                                        payment = paymentState.value.payment,
+                                        paymentValidation = paymentState.value.paymentError,
+                                        onPaymentEntered = {
+                                            viewModel.onPaymentEvent(
+                                                PaymentEvent.PaymentChanged(
+                                                    it
+                                                )
+                                            )
+                                        })
 
                                 }
-                                Row(modifier = Modifier.weight(8f)) {
+                                Row(modifier = Modifier.weight(7f)) {
                                     PaymentsTable(
                                         paymentsList = viewModel.enteredPaymentsList,
                                         onDeletePayment = {
@@ -114,8 +141,7 @@ fun PaymentScreen(
                                     onClick = {
                                         viewModel.onPaymentEvent(
                                             PaymentEvent.EnterPayment(
-                                                it,
-                                                payment
+                                                it
                                             )
                                         )
                                     })
@@ -140,14 +166,42 @@ fun PaymentScreen(
                 }
             }
         })
-    if(paymentState.value.showAlreadyPayedDialog) {
-        Dialog(
+    if (paymentState.value.showAlreadyPayedDialog) {
+        CustomDialog(
             confirmButtonText = stringResource(id = R.string.ok),
             messageText = stringResource(id = R.string.payment_finished),
             titleText = stringResource(id = R.string.receipt),
-            onConfirm = { viewModel.onPaymentEvent(PaymentEvent.ToggleAlreadyPayedDialog(false))},
-            onDismiss = { viewModel.onPaymentEvent(PaymentEvent.ToggleAlreadyPayedDialog(false))},
+            onConfirm = { viewModel.onPaymentEvent(PaymentEvent.ToggleAlreadyPayedDialog(false)) },
+            onDismiss = { viewModel.onPaymentEvent(PaymentEvent.ToggleAlreadyPayedDialog(false)) },
             imageVector = Icons.Default.Payment,
+            confirmButtonColor = colorResource(id = R.color.okay_button_green)
+        )
+    }
+    if(paymentState.value.showPrintingProgressDialog)
+        ProgressDialog(
+            title = stringResource(id = R.string.printing_process),
+            onDismiss = { viewModel.onPaymentEvent(PaymentEvent.TogglePaymentProgressDialog(false)) })
+
+    if (paymentState.value.showPrintCompleteDialog){
+        CustomDialog(
+            confirmButtonText = stringResource(id = R.string.ok),
+            messageText = stringResource(id = R.string.receipt_printed),
+            titleText = stringResource(id = R.string.receipt),
+            onConfirm = {  viewModel.onPaymentEvent(PaymentEvent.FinishReceipt)},
+            onDismiss = { viewModel.onPaymentEvent(PaymentEvent.TogglePrintCompleteDialog(false)) },
+            imageVector = Icons.Default.Payment,
+            confirmButtonColor = colorResource(id = R.color.okay_button_green)
+        )
+    }
+
+    if(paymentState.value.showPrintErrorDialog){
+        CustomDialog(
+            confirmButtonText = stringResource(id = R.string.ok),
+            messageText = printErrorMessage,
+            titleText = stringResource(id = R.string.receipt),
+            onConfirm = { viewModel.onPaymentEvent(PaymentEvent.ToggleErrorPrintDialog(false))},
+            onDismiss = { viewModel.onPaymentEvent(PaymentEvent.ToggleErrorPrintDialog(false))},
+            imageVector = Icons.Default.Print,
             confirmButtonColor = colorResource(id = R.color.okay_button_green)
         )
     }

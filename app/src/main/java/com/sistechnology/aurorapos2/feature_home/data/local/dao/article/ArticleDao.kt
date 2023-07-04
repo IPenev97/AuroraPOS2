@@ -19,6 +19,9 @@ interface ArticleDao {
     @Query("SELECT * FROM Article WHERE articleGroupId = :articleGroupId")
     fun getByArticleGroupId(articleGroupId: Int) : Flow<List<ArticleEntity>>
 
+    @Query("SELECT * FROM Article WHERE favourite = 1")
+    fun getAllFavourites() : Flow<List<ArticleEntity>>
+
     @Insert(onConflict = REPLACE)
     suspend fun insertArticle(vararg article: ArticleEntity)
 }

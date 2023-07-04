@@ -92,7 +92,8 @@ fun UsersScreen(
             AppBar(
                 onMenuDrawerClick = { },
                 onLogoutClick = {},
-                navController = navController
+                navController = navController,
+                onSettingsClick = {}
             )
         },
         content = { padding ->

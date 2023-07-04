@@ -7,6 +7,7 @@ import com.sistechnology.aurorapos2.feature_authentication.data.repositories.Use
 import com.sistechnology.aurorapos2.feature_authentication.domain.repositories.UserRepository
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleGroupDao
+import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.VatGroupDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.receipt.ParkedReceiptDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.receipt.ReceiptItemDao
 import com.sistechnology.aurorapos2.feature_home.data.repositories.ArticlesRepositoryImpl
@@ -16,6 +17,9 @@ import com.sistechnology.aurorapos2.feature_home.domain.repositories.ReceiptRepo
 import com.sistechnology.aurorapos2.feature_payment.data.local.dao.PaymentTypeDao
 import com.sistechnology.aurorapos2.feature_payment.data.repositories.PaymentRepositoryImpl
 import com.sistechnology.aurorapos2.feature_payment.domain.repositories.PaymentRepository
+import com.sistechnology.aurorapos2.feature_settings.data.local.dao.TerminalParameterDao
+import com.sistechnology.aurorapos2.feature_settings.data.repositories.TerminalParameterRepositoryImpl
+import com.sistechnology.aurorapos2.feature_settings.domain.repositories.TerminalParameterRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,8 +37,8 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideArticleRepository(articleDao: ArticleDao, articleGroupDao: ArticleGroupDao) : ArticleRepository{
-        return ArticlesRepositoryImpl(articleDao, articleGroupDao)
+    fun provideArticleRepository(articleDao: ArticleDao, articleGroupDao: ArticleGroupDao, vatGroupDao: VatGroupDao) : ArticleRepository{
+        return ArticlesRepositoryImpl(articleDao, articleGroupDao, vatGroupDao)
     }
 
     @Singleton
@@ -48,4 +52,12 @@ object RepositoryModule {
     fun provideReceiptRepository(receiptDao: ParkedReceiptDao, receiptItemDao: ReceiptItemDao, sharedPreferencesHelper: SharedPreferencesHelper) : ReceiptRepository{
         return ReceiptRepositoryImpl(receiptDao, receiptItemDao, sharedPreferencesHelper)
     }
+
+    @Singleton
+    @Provides
+    fun provideTerminalParameterRepository(terminalParameterDao: TerminalParameterDao) : TerminalParameterRepository {
+        return TerminalParameterRepositoryImpl(terminalParameterDao)
+    }
+
+
 }

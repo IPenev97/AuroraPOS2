@@ -13,12 +13,12 @@ class PaymentRepositoryImpl(
 
     private fun PaymentType.toEntity() : PaymentTypeEntity {
         return PaymentTypeEntity(id = this.id,
-        type = this.type)
+        type = this.name)
     }
 
     private fun PaymentTypeEntity.toModel() : PaymentType {
         return PaymentType(id = this.id,
-            type = this.type)
+            name = this.type)
     }
 
 

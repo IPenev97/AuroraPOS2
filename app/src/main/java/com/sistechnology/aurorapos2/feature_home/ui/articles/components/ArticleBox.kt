@@ -34,10 +34,9 @@ fun ArticleBox(
             )
             .combinedClickable (onClick = {onArticleClick(article)}, onLongClick = {onArticleLongClick(article)})
     ) {
-        Column(modifier = Modifier.fillMaxSize().aspectRatio(1f).padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = Modifier.fillMaxSize().aspectRatio(12f/8f).padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
-                modifier = Modifier
-                    .defaultMinSize(minHeight = 60.dp, minWidth = 60.dp),
+                modifier = Modifier.fillMaxSize().weight(2f),
                 painter = painterResource(id = R.drawable.shopping_cart),
                 contentDescription = stringResource(
                     id = R.string.articleImage
@@ -45,12 +44,12 @@ fun ArticleBox(
             )
             Text(
                 text = article.name,
-                modifier = Modifier,
+                modifier = Modifier.padding(2.dp).weight(1f),
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = article.price.toString() + "€",
-                modifier = Modifier,
+                text = String.format("%.2f €", article.price),
+                modifier = Modifier.weight(1f),
                 fontWeight = FontWeight.Bold
             )
         }

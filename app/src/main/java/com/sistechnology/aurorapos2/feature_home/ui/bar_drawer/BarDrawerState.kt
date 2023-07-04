@@ -1,4 +1,7 @@
 package com.sistechnology.aurorapos2.feature_home.ui.bar_drawer
 
-class BarDrawerState {
+data class BarDrawerState(
+    val showLogoutDialog: Boolean = false,
+) {
+
 }

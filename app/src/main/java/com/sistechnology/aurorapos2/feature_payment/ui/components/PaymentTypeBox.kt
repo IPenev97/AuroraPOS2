@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,7 +39,7 @@ fun PaymentTypeBox(
             )
             .clickable {onClick(paymentType)}){
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = paymentType.type, modifier = Modifier.weight(3f), style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color.White))
+                Text(text = paymentType.name, modifier = Modifier.weight(3f), style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color.White))
                 Image(painter = painterResource(id = R.drawable.cash_white), contentDescription = stringResource(
                     id = R.string.cash
                 ), modifier = Modifier.weight(1f))

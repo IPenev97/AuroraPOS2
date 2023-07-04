@@ -4,5 +4,7 @@ data class Article(
     val id: Int = 0,
     val name: String,
     val price: Double,
-    val articleGroupId: Int
+    val vatGroupId: Int,
+    val articleGroupId: Int,
+    val favourite: Boolean = false
 )

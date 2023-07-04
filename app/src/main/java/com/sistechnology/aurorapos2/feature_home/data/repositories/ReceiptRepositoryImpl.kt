@@ -15,11 +15,13 @@ class ReceiptRepositoryImpl(
     val sharedPreferencesHelper: SharedPreferencesHelper
 ) : ReceiptRepository {
 
-    private fun Receipt.ToEntity(): ParkedReceiptEntity {
+    private fun Receipt.toEntity(): ParkedReceiptEntity {
         return ParkedReceiptEntity(
             id = this.id,
             basketNumber = this.basketNumber,
-            userId = sharedPreferencesHelper.getCurrentUserId() ?: 0
+            userId = sharedPreferencesHelper.getCurrentUserId() ?: 0,
+            discountType = this.discountType,
+            discountValue = this.discountValue
         )
     }
 
@@ -27,7 +29,9 @@ class ReceiptRepositoryImpl(
         return Receipt(
             id = this.id,
             basketNumber = this.basketNumber,
-            receiptItemList = receiptItemsList
+            receiptItemList = receiptItemsList,
+            discountType = this.discountType,
+            discountValue = this.discountValue
         )
     }
 
@@ -38,7 +42,9 @@ class ReceiptRepositoryImpl(
             quantity = this.quantity,
             price = this.price,
             articleId = this.articleId,
-            receiptId = receiptId
+            receiptId = receiptId,
+            discountValue = this.discountValue,
+            discountType = this.discountType
         )
     }
 
@@ -48,11 +54,13 @@ class ReceiptRepositoryImpl(
             name = this.name,
             quantity = this.quantity,
             price = this.price,
-            articleId = this.articleId
+            articleId = this.articleId,
+            discountType = this.discountType,
+            discountValue = this.discountValue
         )
     }
 
-    override suspend fun getAllReceiptsByUserId(userId: Int): List<Receipt> {
+    override suspend fun getAllReceiptsByUserId(userId: Int): MutableList<Receipt> {
             val output: MutableList<Receipt> = arrayListOf()
             receiptDao.getAllReceiptsWithReceiptItemsByUserId(userId).forEach { receiptWithReceiptItems ->
                 val receipt = receiptWithReceiptItems.receipt
@@ -66,7 +74,7 @@ class ReceiptRepositoryImpl(
     }
 
     override suspend fun addReceipt(vararg receipt: Receipt) {
-        val ids: LongArray = receiptDao.insert(*receipt.map{ it.ToEntity()}.toTypedArray())
+        val ids: LongArray = receiptDao.insert(*receipt.map{ it.toEntity()}.toTypedArray())
         receipt.forEachIndexed { i,r -> addReceiptItem(*r.receiptItemList.toTypedArray(), receiptId = ids[i].toInt())}
     }
 

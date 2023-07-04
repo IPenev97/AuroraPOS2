@@ -5,17 +5,20 @@ import com.sistechnology.aurorapos2.feature_authentication.domain.models.User
 import com.sistechnology.aurorapos2.feature_authentication.domain.repositories.UserRepository
 import com.sistechnology.aurorapos2.feature_home.domain.models.article.Article
 import com.sistechnology.aurorapos2.feature_home.domain.models.article.ArticleGroup
-import com.sistechnology.aurorapos2.feature_home.domain.models.receipt.Receipt
+import com.sistechnology.aurorapos2.feature_home.domain.models.article.VatGroup
 import com.sistechnology.aurorapos2.feature_home.domain.repositories.ArticleRepository
 import com.sistechnology.aurorapos2.feature_home.domain.repositories.ReceiptRepository
 import com.sistechnology.aurorapos2.feature_payment.domain.models.PaymentType
 import com.sistechnology.aurorapos2.feature_payment.domain.repositories.PaymentRepository
+import com.sistechnology.aurorapos2.feature_settings.data.local.entities.TerminalParameterEntity
+import com.sistechnology.aurorapos2.feature_settings.domain.repositories.TerminalParameterRepository
 
 class PresetDataHelper(
     val userRepository: UserRepository,
     val articleRepository: ArticleRepository,
     val paymentRepository: PaymentRepository,
-    val receiptRepository: ReceiptRepository
+    val receiptRepository: ReceiptRepository,
+    val terminalParameterRepository: TerminalParameterRepository
 ) {
 
     suspend fun populateDatabase() {
@@ -55,54 +58,63 @@ class PresetDataHelper(
             User(username = "kasier26", password = "1234"),
             User(username = "kasier27", password = "1234"),
         )
+        articleRepository.insertVatGroup(
+            VatGroup(group = "A", value = 20.0),
+            VatGroup(group = "B", value = 10.0),
+            VatGroup(group = "C", value = 30.0),
+            VatGroup(group = "D", value = 0.0),
+        )
+
         articleRepository.addArticle(
-            Article(name = "Banana", price = 1.50, articleGroupId = 1),
-            Article(name = "Banana", price = 1.50, articleGroupId = 2),
-            Article(name = "Banana", price = 1.50, articleGroupId = 1),
-            Article(name = "Banana", price = 1.50, articleGroupId = 3),
-            Article(name = "Banana", price = 1.50, articleGroupId = 2),
-            Article(name = "Banana", price = 1.50, articleGroupId = 4),
-            Article(name = "Banana", price = 1.50, articleGroupId = 1),
-            Article(name = "Banana", price = 1.50, articleGroupId = 2),
-            Article(name = "Banana", price = 1.50, articleGroupId = 1),
-            Article(name = "Banana", price = 1.50, articleGroupId = 1),
-            Article(name = "Banana", price = 1.50, articleGroupId = 2),
-            Article(name = "Banana", price = 1.50, articleGroupId = 2),
-            Article(name = "Banana", price = 1.50, articleGroupId = 3),
-            Article(name = "Banana", price = 1.50, articleGroupId = 4),
-            Article(name = "Banana", price = 1.50, articleGroupId = 5),
-            Article(name = "Banana", price = 1.50, articleGroupId = 5),
-            Article(name = "Banana", price = 1.50, articleGroupId = 6),
-            Article(name = "Banana", price = 1.50, articleGroupId = 6),
-            Article(name = "Banana", price = 1.50, articleGroupId = 7),
-            Article(name = "Banana", price = 1.50, articleGroupId = 7),
-            Article(name = "Banana", price = 1.50, articleGroupId = 7),
-            Article(name = "Banana", price = 1.50, articleGroupId = 8),
-            Article(name = "Banana", price = 1.50, articleGroupId = 9),
-            Article(name = "Banana", price = 1.50, articleGroupId = 10),
-            Article(name = "Banana", price = 1.50, articleGroupId = 10),
-            Article(name = "Banana", price = 1.50, articleGroupId = 2),
-            Article(name = "Banana", price = 1.50, articleGroupId = 9),
-            Article(name = "Banana", price = 1.50, articleGroupId = 2),
-            Article(name = "Banana", price = 1.50, articleGroupId = 4),
-            Article(name = "Banana", price = 1.50, articleGroupId = 5),
-            Article(name = "Banana", price = 1.50, articleGroupId = 6),
-            Article(name = "Banana", price = 1.50, articleGroupId = 4),
-            Article(name = "Banana", price = 1.50, articleGroupId = 4),
-            Article(name = "Banana", price = 1.50, articleGroupId = 4),
-            Article(name = "Banana", price = 1.50, articleGroupId = 4),
-            Article(name = "Banana", price = 1.50, articleGroupId = 3),
-            Article(name = "Banana", price = 1.50, articleGroupId = 3),
-            Article(name = "Banana", price = 1.50, articleGroupId = 2),
-            Article(name = "Banana", price = 1.50, articleGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 1, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 2, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 1, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 3, vatGroupId = 2),
+            Article(name = "Banana", price = 1.50, articleGroupId = 2, vatGroupId = 2),
+            Article(name = "Banana", price = 1.50, articleGroupId = 4, vatGroupId = 2),
+            Article(name = "Banana", price = 1.50, articleGroupId = 1, vatGroupId = 2),
+            Article(name = "Banana", price = 1.50, articleGroupId = 2, vatGroupId = 2),
+            Article(name = "Banana", price = 1.50, articleGroupId = 1, vatGroupId = 2),
+            Article(name = "Banana", price = 1.50, articleGroupId = 1, vatGroupId = 2),
+            Article(name = "Banana", price = 1.50, articleGroupId = 2, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 2, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 3, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 4, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 5, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 5, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 6, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 6, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 7, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 7, vatGroupId = 3),
+            Article(name = "Banana", price = 1.50, articleGroupId = 7, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 8, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 9, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 10, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 10, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 2, vatGroupId = 4),
+            Article(name = "Banana", price = 1.50, articleGroupId = 9, vatGroupId = 4),
+            Article(name = "Banana", price = 1.50, articleGroupId = 2, vatGroupId = 4),
+            Article(name = "Banana", price = 1.50, articleGroupId = 4, vatGroupId = 4),
+            Article(name = "Banana", price = 1.50, articleGroupId = 5, vatGroupId = 4),
+            Article(name = "Banana", price = 1.50, articleGroupId = 6, vatGroupId = 4),
+            Article(name = "Banana", price = 1.50, articleGroupId = 4, vatGroupId = 4),
+            Article(name = "Banana", price = 1.50, articleGroupId = 4, vatGroupId = 4),
+            Article(name = "Banana", price = 1.50, articleGroupId = 4, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 4, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 3, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 3, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 2, vatGroupId = 1),
+            Article(name = "Banana", price = 1.50, articleGroupId = 1, vatGroupId = 1),
 
 
             )
         paymentRepository.addPayment(
-            PaymentType(type = "Cash"),
-            PaymentType(type = "Card"),
-            PaymentType(type = "Cheque"),
+            PaymentType(name = "Cash"),
+            PaymentType(name = "Card"),
+            PaymentType(name = "Cheque"),
         )
+        terminalParameterRepository.saveTerminalParameter(TerminalParameterEntity())
+
     }
 
 }

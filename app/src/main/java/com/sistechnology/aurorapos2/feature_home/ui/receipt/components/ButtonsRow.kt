@@ -31,7 +31,7 @@ fun ButtonsRow(
 ) {
     val blueColor = colorResource(id = R.color.logo_blue)
     val textStyle = TextStyle(color = Color.White, fontWeight = FontWeight.Bold, fontSize = 25.sp)
-    Row(modifier = modifier.padding(10.dp)) {
+    Row(modifier = modifier) {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
@@ -39,7 +39,8 @@ fun ButtonsRow(
                 .weight(1f)
                 .clip(RoundedCornerShape(8.dp))
                 .border(width = 4.dp, shape = RoundedCornerShape(8.dp), color = blueColor)
-                .background(blueColor),
+                .background(blueColor)
+                .clickable(onClick = onDiscountClicked),
             contentAlignment = Alignment.Center
         ) {
             Text(text = "%", style = textStyle.copy(fontSize = 40.sp), )

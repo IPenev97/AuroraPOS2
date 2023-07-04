@@ -5,10 +5,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Backup
-import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
@@ -24,7 +21,8 @@ import com.sistechnology.aurorapos2.core.ui.Screen
 fun AppBar(
     onMenuDrawerClick: () -> Unit,
     onLogoutClick: () -> Unit,
-    navController: NavController
+    onSettingsClick: () -> Unit,
+    navController: NavController,
 ) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -34,7 +32,7 @@ fun AppBar(
         backgroundColor = colorResource(id = R.color.logo_blue),
         elevation = 5.dp,
         navigationIcon = {
-            if(navBackStackEntry?.destination?.route.equals(Screen.HomeScreen.route)) {
+            if (navBackStackEntry?.destination?.route.equals(Screen.HomeScreen.route)) {
                 IconButton(onClick = onMenuDrawerClick) {
                     Icon(
                         imageVector = Icons.Filled.Menu,
@@ -43,7 +41,7 @@ fun AppBar(
                     )
                 }
             } else {
-                IconButton(onClick = {navController.popBackStack()}) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = stringResource(id = R.string.back),
@@ -59,6 +57,14 @@ fun AppBar(
                     contentDescription = stringResource(id = R.string.logout),
                     tint = Color.White
 
+                )
+            }
+            if(!navBackStackEntry?.destination?.route.equals(Screen.SettingsScreen.route))
+            IconButton(onClick = { onSettingsClick() }) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.White
                 )
             }
         })

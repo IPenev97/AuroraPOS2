@@ -1,6 +1,6 @@
 package com.sistechnology.aurorapos2.feature_home.ui
 
-import EditReceiptItemDialog
+import EditReceiptItemBox
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -8,11 +8,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -21,18 +18,19 @@ import androidx.navigation.NavController
 import com.sistechnology.aurorapos2.R
 import com.sistechnology.aurorapos2.core.ui.Screen
 import com.sistechnology.aurorapos2.core.ui.components.AppBar
-import com.sistechnology.aurorapos2.core.ui.components.Dialog
-import com.sistechnology.aurorapos2.feature_home.domain.models.validation.ArticleValidation
+import com.sistechnology.aurorapos2.core.ui.components.CustomDialog
+import com.sistechnology.aurorapos2.feature_home.domain.models.article.ArticleInfo
 import com.sistechnology.aurorapos2.feature_home.ui.articles.ArticleEvent
 import com.sistechnology.aurorapos2.feature_home.ui.articles.ArticleGroupGrid
 import com.sistechnology.aurorapos2.feature_home.ui.articles.ArticlesGrid
 import com.sistechnology.aurorapos2.feature_home.ui.articles.components.EditArticleBox
+import com.sistechnology.aurorapos2.feature_home.ui.articles.components.FavouriteArticlesButtons
 import com.sistechnology.aurorapos2.feature_home.ui.bar_drawer.BarDrawerEvent
 import com.sistechnology.aurorapos2.feature_home.ui.receipt.ButtonsRow
 import com.sistechnology.aurorapos2.feature_home.ui.receipt.ReceiptColumn
 import com.sistechnology.aurorapos2.feature_home.ui.receipt.ReceiptEvent
 import com.sistechnology.aurorapos2.feature_home.ui.receipt.components.BasketsRow
-import com.sistechnology.aurorapos2.feature_payment.ui.PaymentEvent
+import com.sistechnology.aurorapos2.feature_home.ui.receipt.components.DiscountBox
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -44,24 +42,17 @@ fun HomeScreen(
 
     val articlesState = viewModel.articlesState.value
     val receiptState = viewModel.receiptState.value
+    val barDrawerState = viewModel.barDrawerState.value
 
 
-    var showEditReceiptDialog by remember { mutableStateOf(false) }
-    var showEmptyListDialog by remember { mutableStateOf(false) }
-    var showLogoutDialog by remember { mutableStateOf(false) }
-    var showEditArticleBox by remember { mutableStateOf(false) }
 
-    var showEditArticleErrorDialog by remember {mutableStateOf(false)}
-    var showEditArticleSuccessDialog by remember {mutableStateOf(false)}
-
-    var editArticleErrorMessage by remember { mutableStateOf("") }
 
 
 
 
 
     LaunchedEffect(key1 = true) {
-
+        viewModel.clearBasket()
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is HomeScreenViewModel.UiEvent.Navigate -> {
@@ -71,30 +62,18 @@ fun HomeScreen(
                         }
                     }
                 }
-                is HomeScreenViewModel.UiEvent.EditArticle -> {
-                    when (event.validation) {
-                        ArticleValidation.Success -> {
-                            viewModel.onArticleEvent(ArticleEvent.ToggleEditArticleSuccessDialog)
-                        }
-                        ArticleValidation.MissingName -> viewModel.onArticleEvent(ArticleEvent.ToggleEditArticleErrorDialog(
-                            LocalContext.current
-                        ArticleValidation.MissingPrice -> TODO()
-                        ArticleValidation.InvalidName -> TODO()
-                        ArticleValidation.InvalidPriceFormat -> TODO()
-                        ArticleValidation.InvalidPriceRange -> TODO()
-                    }
-                }
-
             }
         }
     }
+
 
     Scaffold(
         topBar = {
             AppBar(
                 onMenuDrawerClick = {},
-                onLogoutClick = { showLogoutDialog = true },
-                navController = navController
+                onLogoutClick = { viewModel.onBarDrawerEvent(BarDrawerEvent.ToggleLogoutDialog(true)) },
+                navController = navController,
+                onSettingsClick = {viewModel.onBarDrawerEvent(BarDrawerEvent.NavigateToSettings)}
             )
         },
         content = { padding ->
@@ -108,7 +87,7 @@ fun HomeScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(1.5f)
+                                .weight(1f)
                         ) {
                             BasketsRow(
                                 basketList = receiptState.receiptList,
@@ -122,11 +101,10 @@ fun HomeScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(7f)
+                                .weight(8f)
                         ) {
                             ReceiptColumn(
                                 receipt = receiptState.receiptList[receiptState.selectedBasketIndex],
-                                total = viewModel.getReceiptTotal(),
                                 Modifier
                                     .fillMaxSize()
                                     .weight(5.5f)
@@ -137,7 +115,12 @@ fun HomeScreen(
                                             index,
                                             item
                                         )
-                                    ); showEditReceiptDialog = true
+                                    );
+                                    viewModel.onReceiptEvent(
+                                        ReceiptEvent.ToggleEditReceiptItemBox(
+                                            true
+                                        )
+                                    )
                                 })
                             ArticlesGrid(
                                 articlesList = articlesState.articleList,
@@ -149,33 +132,61 @@ fun HomeScreen(
                                 },
                                 onArticleLongClick = {
                                     viewModel.onArticleEvent(ArticleEvent.SelectArticle(it))
-                                    showEditArticleBox = true
                                 })
                         }
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(1.5f)
+                                .weight(2f)
                         ) {
                             ButtonsRow(
                                 Modifier
                                     .fillMaxSize()
                                     .weight(5.5f),
+                                onPayClicked =
                                 {
                                     if (viewModel.receiptItemList.isNotEmpty()) viewModel.onReceiptEvent(
                                         ReceiptEvent.PayReceipt
                                     )
+
                                 },
-                                {
-                                    if (viewModel.receiptItemList.isNotEmpty()) showEmptyListDialog =
-                                        true
+                                onCancelClicked = {
+                                    if (viewModel.receiptItemList.isNotEmpty()) viewModel.onReceiptEvent(
+                                        ReceiptEvent.ToggleClearReceiptItemListDialog(true)
+                                    )
                                 },
-                                {}
+                                onDiscountClicked = {
+                                    viewModel.onReceiptEvent(
+                                        ReceiptEvent.ToggleDiscountBox(
+                                            true
+                                        )
+                                    )
+                                }
+                            )
+                            FavouriteArticlesButtons(
+                                onFavouriteClick = {
+                                    viewModel.onArticleEvent(
+                                        ArticleEvent.SelectArticleGroup(
+                                            0
+                                        )
+                                    )
+                                },
+                                onRecentlySoldClicked = {
+                                    viewModel.onArticleEvent(
+                                        ArticleEvent.SelectArticleGroup(
+                                            -1
+                                        )
+                                    )
+                                },
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .weight(0.5f),
+                                selectedArticleGroupId = articlesState.selectedArticleGroupId
                             )
                             ArticleGroupGrid(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .weight(4.5f),
+                                    .weight(4f),
                                 articleGroupList = articlesState.articleGroupList,
                                 onClick = {
                                     viewModel.onArticleEvent(
@@ -190,61 +201,44 @@ fun HomeScreen(
             }
         })
 
+
+
     //Dialogs
-    if (showEditReceiptDialog) {
-        EditReceiptItemDialog(
-            receiptItem = receiptState.selectedReceiptItem,
-            onDismiss = { showEditReceiptDialog = false },
-            onDeleteClicked = { viewModel.onReceiptEvent(ReceiptEvent.DeleteReceiptItem) },
-            onSaveClicked = { viewModel.onReceiptEvent(ReceiptEvent.EditReceipt(it)) }
-        )
-    }
-    if (showEmptyListDialog) {
-        Dialog(
+    if (receiptState.showClearReceiptItemListDialog) {
+        CustomDialog(
             confirmButtonText = stringResource(id = R.string.clear),
             messageText = stringResource(id = R.string.clear_receipt_confirm),
             titleText = stringResource(
                 id = R.string.receipt
             ),
             onConfirm = { viewModel.onReceiptEvent(ReceiptEvent.ClearReceipt) },
-            onDismiss = { showEmptyListDialog = false },
+            onDismiss = { viewModel.onReceiptEvent(ReceiptEvent.ToggleClearReceiptItemListDialog(false)) },
             confirmButtonColor = colorResource(id = R.color.delete_red),
             cancelButtonText = stringResource(id = R.string.cancel),
             imageVector = Icons.Default.Delete,
             imageColor = colorResource(id = R.color.delete_red)
         )
     }
-    if (showLogoutDialog) {
-        Dialog(
+    if (barDrawerState.showLogoutDialog) {
+        CustomDialog(
             confirmButtonText = stringResource(id = R.string.ok),
             messageText = stringResource(id = R.string.confirm_logout_text),
             titleText = stringResource(id = R.string.logout),
             onConfirm = { viewModel.onBarDrawerEvent(BarDrawerEvent.LogoutEvent) },
-            onDismiss = { showLogoutDialog = false },
+            onDismiss = { viewModel.onBarDrawerEvent(BarDrawerEvent.ToggleLogoutDialog(false)) },
             confirmButtonColor = colorResource(id = R.color.okay_button_green),
             cancelButtonText = stringResource(id = R.string.cancel),
             imageVector = Icons.Default.Logout
 
         )
     }
-    if(articlesState.showEditArticleErrorDialog){
-        Dialog(
-            confirmButtonText = stringResource(id = R.string.ok),
-            messageText = articlesState.editArticleErrorMessage,
-            titleText = stringResource(id = R.string.edit_article),
-            onConfirm = {viewModel.onArticleEvent(ArticleEvent.ToggleEditArticleErrorDialog(""))},
-            onDismiss = {viewModel.onArticleEvent(ArticleEvent.ToggleEditArticleErrorDialog(""))},
-            imageVector = Icons.Default.Error,
-            confirmButtonColor = colorResource(id = R.color.okay_button_green)
-        )
-    }
-    if(articlesState.showEditArticleSuccessDialog){
-        Dialog(
+    if (articlesState.showEditArticleSuccessDialog) {
+        CustomDialog(
             confirmButtonText = stringResource(id = R.string.ok),
             messageText = stringResource(id = R.string.edit_article_success),
             titleText = stringResource(id = R.string.edit_article),
-            onConfirm = {viewModel.onArticleEvent(ArticleEvent.ToggleEditArticleSuccessDialog)},
-            onDismiss = {viewModel.onArticleEvent(ArticleEvent.ToggleEditArticleSuccessDialog)},
+            onConfirm = { viewModel.onArticleEvent(ArticleEvent.ToggleEditArticleSuccessDialog(false)) },
+            onDismiss = { viewModel.onArticleEvent(ArticleEvent.ToggleEditArticleSuccessDialog(false)) },
             imageVector = Icons.Default.Done,
             confirmButtonColor = colorResource(id = R.color.okay_button_green)
         )
@@ -252,8 +246,11 @@ fun HomeScreen(
 
 
 
+
+
+    //Edit Boxes
     AnimatedVisibility(
-        visible = showEditArticleBox,
+        visible = articlesState.showEditArticleBox,
         enter = slideInVertically(initialOffsetY = { 600 }) + fadeIn(
             initialAlpha = 0.2f
         ),
@@ -261,13 +258,73 @@ fun HomeScreen(
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             EditArticleBox(
-                onDismiss = { showEditArticleBox = false },
+                onDismiss = { viewModel.onArticleEvent(ArticleEvent.ToggleEditArticleBox(false)) },
                 articleGroupList = articlesState.articleGroupList,
-                articleInfo = articlesState.selectedArticleInfo,
-                onSave = {}
+                articleInfo = articlesState.selectedArticleInfo ?: ArticleInfo(),
+                onSave = { viewModel.onArticleEvent(ArticleEvent.EditArticle(it)) },
+                vatGroupList = articlesState.vatGroupList,
+                onNameEntered = { viewModel.onArticleEvent(ArticleEvent.NameEntered(it)) },
+                onPriceEntered = { viewModel.onArticleEvent(ArticleEvent.PriceEntered(it)) }
             )
         }
 
+    }
+    AnimatedVisibility(
+        visible = receiptState.showDiscountBox,
+        enter = slideInVertically(initialOffsetY = { 600 }) + fadeIn(
+            initialAlpha = 0.2f
+        ),
+        exit = slideOutVertically(targetOffsetY = { 600 }) + fadeOut(targetAlpha = 0.2f)
+    ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            DiscountBox(
+                receiptInfo = receiptState.selectedReceiptInfo,
+                onSave = {viewModel.onReceiptEvent(ReceiptEvent.SaveChangesToReceipt)},
+                onDismiss = { viewModel.onReceiptEvent(ReceiptEvent.ToggleDiscountBox(false)) },
+                onDiscountTypeChanged = { viewModel.onReceiptEvent(ReceiptEvent.ReceiptDiscountTypeChanged) },
+                onDiscountEntered = {
+                    viewModel.onReceiptEvent(
+                        ReceiptEvent.ReceiptDiscountEntered(
+                            it
+                        )
+                    )
+                })
+        }
+    }
+
+    AnimatedVisibility(
+        visible = receiptState.showEditReceiptItemBox,
+        enter = slideInVertically(initialOffsetY = { 600 }) + fadeIn(
+            initialAlpha = 0.2f
+        ),
+        exit = slideOutVertically(targetOffsetY = { 600 }) + fadeOut(targetAlpha = 0.2f)
+    ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            EditReceiptItemBox(
+                receiptItemInfo = receiptState.selectedReceiptItemInfo,
+                onDismiss = { viewModel.onReceiptEvent(ReceiptEvent.ToggleEditReceiptItemBox(false)) },
+                onDeleteClicked = { viewModel.onReceiptEvent(ReceiptEvent.DeleteReceiptItem) },
+                onSaveClicked = { viewModel.onReceiptEvent(ReceiptEvent.SaveChangesToReceiptItem) },
+                onQuantityEntered = {
+                    viewModel.onReceiptEvent(
+                        ReceiptEvent.ReceiptItemQuantityEntered(
+                            it
+                        )
+                    )
+                },
+                onMinusPressed = { viewModel.onReceiptEvent(ReceiptEvent.ReceiptItemMinusPressed) },
+                onPlusPressed = { viewModel.onReceiptEvent(ReceiptEvent.ReceiptItemPlusPressed) },
+                onDiscountEntered = {
+                    viewModel.onReceiptEvent(
+                        ReceiptEvent.ReceiptItemDiscountEntered(
+                            it
+                        )
+                    )
+                },
+                onDiscountTypeChanged = { viewModel.onReceiptEvent(ReceiptEvent.ReceiptItemDiscountTypeChanged) }
+
+            )
+        }
     }
 
 

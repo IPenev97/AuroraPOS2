@@ -1,6 +1,7 @@
 package com.sistechnology.aurorapos2.core.ui.components
 
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,42 +40,49 @@ fun IconTextField(
     textSize: Int = 25,
     labelSize: Int = 16,
     inputType: KeyboardType = KeyboardType.Text,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    errorMessage: String = "",
     ) {
     val focusManager = LocalFocusManager.current
-    TextField(
-        modifier = modifier,
-        value = value,
-        enabled = enabled,
-        label = {
-            Text(
-                text = label,
-                color = textIconColor,
-                fontSize = labelSize.sp
-            )
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = "Deafult Icon",
-                tint = textIconColor
-            )
-        },
-        textStyle = TextStyle(fontSize = textSize.sp, color = textIconColor),
-        onValueChange = { onValueChange(it) },
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = textIconColor,
-            backgroundColor = backGroundColor,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = { focusManager.clearFocus() }),
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Done,
-            keyboardType = inputType
-        ),
-        shape = RoundedCornerShape(12.dp)
-    )
+    Column(modifier = modifier) {
+        TextField(
+            value = value,
+            enabled = enabled,
+            label = {
+                Text(
+                    text = label,
+                    color = textIconColor,
+                    fontSize = labelSize.sp
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "Deafult Icon",
+                    tint = textIconColor
+                )
+            },
+            textStyle = TextStyle(fontSize = textSize.sp, color = textIconColor),
+            onValueChange = { onValueChange(it) },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = textIconColor,
+                backgroundColor = backGroundColor,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.clearFocus() }),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done,
+                keyboardType = inputType
+            ),
+            shape = RoundedCornerShape(12.dp),
+            isError = errorMessage!=""
+
+        )
+        if(errorMessage!="")
+            Text(modifier = Modifier.padding(horizontal = 5.dp, vertical = 0.dp), text = errorMessage, style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.delete_red)))
+    }
+
 }

@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -32,9 +31,9 @@ fun PaymentRow(
         Row (verticalAlignment = Alignment.CenterVertically){
             Text(modifier = Modifier
                 .weight(1f)
-                .padding(10.dp), text = payment.type.type, style = textStyle.copy(textAlign = TextAlign.Start))
+                .padding(10.dp), text = payment.type.name, style = textStyle.copy(textAlign = TextAlign.Start))
             Text(modifier = Modifier
-                .weight(1f), text = payment.amount.toString(), style = textStyle.copy(textAlign = TextAlign.Justify))
+                .weight(1f), text = String.format("%.2f", payment.amount), style = textStyle.copy(textAlign = TextAlign.Justify))
             IconButton(modifier = Modifier, onClick = {onDeleteClick(payment)}) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(id = R.string.deleteIcon), tint = colorResource(
                     id = R.color.delete_red

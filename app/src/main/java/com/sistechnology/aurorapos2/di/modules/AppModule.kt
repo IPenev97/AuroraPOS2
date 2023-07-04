@@ -8,6 +8,7 @@ import com.sistechnology.aurorapos2.feature_authentication.domain.repositories.U
 import com.sistechnology.aurorapos2.feature_home.domain.repositories.ArticleRepository
 import com.sistechnology.aurorapos2.feature_home.domain.repositories.ReceiptRepository
 import com.sistechnology.aurorapos2.feature_payment.domain.repositories.PaymentRepository
+import com.sistechnology.aurorapos2.feature_settings.domain.repositories.TerminalParameterRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,13 +28,25 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideSharedPreferencesHelper(context: Context) : SharedPreferencesHelper{
+    fun provideSharedPreferencesHelper(context: Context): SharedPreferencesHelper {
         return SharedPreferencesHelper.getInstance(context)
     }
 
     @Singleton
     @Provides
-    fun providePresetDataHelper(userRepository: UserRepository, articleRepository: ArticleRepository, paymentRepository: PaymentRepository, receiptRepository: ReceiptRepository) : PresetDataHelper{
-        return PresetDataHelper(userRepository, articleRepository, paymentRepository, receiptRepository)
+    fun providePresetDataHelper(
+        userRepository: UserRepository,
+        articleRepository: ArticleRepository,
+        paymentRepository: PaymentRepository,
+        receiptRepository: ReceiptRepository,
+        terminalParameterRepository: TerminalParameterRepository
+    ): PresetDataHelper {
+        return PresetDataHelper(
+            userRepository,
+            articleRepository,
+            paymentRepository,
+            receiptRepository,
+            terminalParameterRepository
+        )
     }
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "733376422805",
+    "project_id": "aurorapos2",
+    "storage_bucket": "aurorapos2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733376422805:android:e252a1ea1e1b4cba354c9c",
+        "android_client_info": {
+          "package_name": "com.sistechnology.aurorapos2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733376422805-cj48i0qpt5d7jj41j50ojamkkl1vpljt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOXHZbtrtGb4ygmvhURUOHPxT4w9P9TwA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733376422805-cj48i0qpt5d7jj41j50ojamkkl1vpljt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

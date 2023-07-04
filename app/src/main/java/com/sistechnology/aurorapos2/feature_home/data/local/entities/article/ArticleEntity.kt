@@ -12,7 +12,11 @@ data class ArticleEntity(
     @ColumnInfo(name = "price")
     val price: Double,
     @ColumnInfo(name = "articleGroupId")
-    val articleGroupId: Int
+    val articleGroupId: Int,
+    @ColumnInfo(name = "vatGroupId")
+    val vatGroupId: Int,
+    @ColumnInfo(name = "favourite")
+    val favourite: Boolean = false,
 
 
-)
+    )

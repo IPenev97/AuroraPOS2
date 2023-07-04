@@ -18,7 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sistechnology.aurorapos2.R
-import com.sistechnology.aurorapos2.core.domain.values.receipt.CurrentReceiptList
 import com.sistechnology.aurorapos2.feature_home.domain.models.receipt.Receipt
 
 @Composable
@@ -45,23 +44,15 @@ fun BasketBox(
             .clickable(onClick = { onClick() })
             .fillMaxSize()
             .aspectRatio(12f / 8f)
-            .padding(5.dp),
+            .padding(2.dp),
         shape = RoundedCornerShape(8.dp),
         color = if (isSelected) colorResource(id = R.color.logo_blue) else Color.LightGray
     ) {
-        if (total != 0.0) {
+        if (receipt.getTotal() != 0.0) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center){
                 Text(
-                    text = "$total",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 25.sp,
-                        color = Color.White,
-                        textAlign = TextAlign.Center
-                    )
-                )
-                Text(
-                    text = " лв.",
+                    text = "${receipt.getTotal()}",
+                    maxLines = 1,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
@@ -71,20 +62,20 @@ fun BasketBox(
                 )
             }
         } else {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    modifier = Modifier
-                        .defaultMinSize(minWidth = 60.dp, minHeight = 60.dp)
-                        .padding(10.dp),
+                    modifier = Modifier.weight(1f).fillMaxSize().padding(1.dp),
                     painter = painterResource(id = R.drawable.ic_shopping_cart_white),
                     contentDescription = "ShoppingCart"
                 )
                 Text(
+                    modifier = Modifier.weight(1f).fillMaxSize().padding(1.dp),
                     text = receipt.basketNumber.toString(),
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontSize = 30.sp,
-                        color = Color.White
+                        color = Color.White,
+                        textAlign = TextAlign.Center
                     )
                 )
             }

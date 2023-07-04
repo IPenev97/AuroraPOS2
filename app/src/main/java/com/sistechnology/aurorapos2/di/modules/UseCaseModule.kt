@@ -8,12 +8,14 @@ import com.sistechnology.aurorapos2.feature_home.domain.repositories.ReceiptRepo
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.articles.*
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.bar_drawer.BarDrawerUseCases
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.bar_drawer.LogoutUseCase
-import com.sistechnology.aurorapos2.feature_home.domain.use_case.receipt.GetParkedReceiptsUseCase
-import com.sistechnology.aurorapos2.feature_home.domain.use_case.receipt.ParkCurrentReceiptsUseCase
-import com.sistechnology.aurorapos2.feature_home.domain.use_case.receipt.ReceiptUseCases
+import com.sistechnology.aurorapos2.feature_home.domain.use_case.receipt.*
 import com.sistechnology.aurorapos2.feature_payment.domain.repositories.PaymentRepository
 import com.sistechnology.aurorapos2.feature_payment.domain.use_case.GetPaymentTypes
 import com.sistechnology.aurorapos2.feature_payment.domain.use_case.PaymentUseCases
+import com.sistechnology.aurorapos2.feature_settings.domain.repositories.TerminalParameterRepository
+import com.sistechnology.aurorapos2.feature_settings.domain.use_case.GetPrintingDeviceInfoUseCase
+import com.sistechnology.aurorapos2.feature_settings.domain.use_case.SavePrintingDeviceInfoUseCase
+import com.sistechnology.aurorapos2.feature_settings.domain.use_case.SettingsUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,7 +51,10 @@ object UseCaseModule {
             getArticlesUseCase = GetArticlesUseCase(articlesRepository),
             getArticleGroupsUseCase = GetArticleGroupsUseCase(articlesRepository),
             getArticlesByGroupUseCase = GetArticlesByGroupUseCase(articlesRepository),
-            getArticleInfo = GetArticleInfo(articlesRepository)
+            getArticleInfo = GetArticleInfoUseCase(articlesRepository),
+            editArticle = EditArticleUseCase(articlesRepository),
+            getVatGroupsUseCase = GetVatGroupsUseCase(articlesRepository),
+            getFavouriteArticlesUseCase = GetFavouriteArticlesUseCase(articlesRepository)
         )
     }
 
@@ -72,6 +77,25 @@ object UseCaseModule {
             ),
             getParkedReceiptsUseCase = GetParkedReceiptsUseCase(
                 receiptRepository,
+                sharedPreferencesHelper
+            ),
+            getReceiptItemInfoUseCase = GetReceiptItemInfoUseCase(
+                receiptRepository
+            ),
+            getReceiptInfoUseCase = GetReceiptInfoUseCase()
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideSettingsUseCases(
+        terminalParameterRepository: TerminalParameterRepository,
+        sharedPreferencesHelper: SharedPreferencesHelper
+    ): SettingsUseCases {
+        return SettingsUseCases(
+            getPrintingDeviceInfoUseCase = GetPrintingDeviceInfoUseCase(terminalParameterRepository),
+            savePrintingDeviceInfoUseCase = SavePrintingDeviceInfoUseCase(
+                terminalParameterRepository,
                 sharedPreferencesHelper
             )
         )

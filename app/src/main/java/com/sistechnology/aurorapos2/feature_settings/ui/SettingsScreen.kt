@@ -28,34 +28,23 @@ fun SettingsScreen(
 
     val printingDeviceState = viewModel.printingDeviceState
 
-    Scaffold(topBar = {
-        AppBar(
-            onMenuDrawerClick = {},
-            onLogoutClick = {},
-            navController = navController,
-            onSettingsClick = {}
-        )
-    },
-        content = { padding ->
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize(),
 
-                ) {
-                ButtonsColumn(
-                    onGeneralSettingsClick = {},
-                    onPrintingDeviceClick = {
-                        viewModel.onPrintingDeviceEvent(
-                            PrintingDeviceEvent.GetPrintingDeviceInfo
-                        )
-                    },
-                    onScaleDeviceClick = {}
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+
+        ) {
+        ButtonsColumn(
+            onGeneralSettingsClick = {},
+            onPrintingDeviceClick = {
+                viewModel.onPrintingDeviceEvent(
+                    PrintingDeviceEvent.GetPrintingDeviceInfo
                 )
-            }
+            },
+            onScaleDeviceClick = {}
+        )
+    }
 
-
-        })
 
     //EditBoxes
     AnimatedVisibility(
@@ -73,8 +62,20 @@ fun SettingsScreen(
                         PrintingDeviceEvent.PrinterNameEntered(it)
                     )
                 },
-            onDismiss = {viewModel.onPrintingDeviceEvent(PrintingDeviceEvent.TogglePrintingDeviceBox(false))},
-            onSave = {viewModel.onPrintingDeviceEvent(PrintingDeviceEvent.SavePrintingDeviceInfo(it))})
+                onDismiss = {
+                    viewModel.onPrintingDeviceEvent(
+                        PrintingDeviceEvent.TogglePrintingDeviceBox(
+                            false
+                        )
+                    )
+                },
+                onSave = {
+                    viewModel.onPrintingDeviceEvent(
+                        PrintingDeviceEvent.SavePrintingDeviceInfo(
+                            it
+                        )
+                    )
+                })
         }
 
     }

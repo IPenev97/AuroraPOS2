@@ -63,17 +63,10 @@ fun PaymentScreen(
 
 
 
-    Scaffold(
-        topBar = {
-            AppBar(
-                onMenuDrawerClick = {},
-                onLogoutClick = { },
-                navController = navController,
-                onSettingsClick = {}
-            )
-        },
-        content = { padding ->
-            Surface(modifier = Modifier.padding(padding)) {
+
+
+
+            Surface() {
                 Column(modifier = Modifier.fillMaxSize()) {
                     Row(
                         modifier = Modifier
@@ -165,7 +158,7 @@ fun PaymentScreen(
                     }
                 }
             }
-        })
+
     if (paymentState.value.showAlreadyPayedDialog) {
         CustomDialog(
             confirmButtonText = stringResource(id = R.string.ok),
@@ -182,10 +175,10 @@ fun PaymentScreen(
             title = stringResource(id = R.string.printing_process),
             onDismiss = { viewModel.onPaymentEvent(PaymentEvent.TogglePaymentProgressDialog(false)) })
 
-    if (paymentState.value.showPrintCompleteDialog){
+    if (paymentState.value.showReceiptClosedDialog){
         CustomDialog(
             confirmButtonText = stringResource(id = R.string.ok),
-            messageText = stringResource(id = R.string.receipt_printed),
+            messageText = stringResource(id = R.string.receipt_closed),
             titleText = stringResource(id = R.string.receipt),
             onConfirm = {  viewModel.onPaymentEvent(PaymentEvent.FinishReceipt)},
             onDismiss = { viewModel.onPaymentEvent(PaymentEvent.TogglePrintCompleteDialog(false)) },

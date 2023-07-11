@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -16,9 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sistechnology.aurorapos2.R
+import com.sistechnology.aurorapos2.core.ui.NavigationDrawer
 import com.sistechnology.aurorapos2.core.ui.Screen
 import com.sistechnology.aurorapos2.core.ui.components.AppBar
 import com.sistechnology.aurorapos2.core.ui.components.CustomDialog
+import com.sistechnology.aurorapos2.core.ui.components.MenuItem
+import com.sistechnology.aurorapos2.core.ui.components.NavShape
 import com.sistechnology.aurorapos2.feature_home.domain.models.article.ArticleInfo
 import com.sistechnology.aurorapos2.feature_home.ui.articles.ArticleEvent
 import com.sistechnology.aurorapos2.feature_home.ui.articles.ArticleGroupGrid
@@ -32,6 +36,7 @@ import com.sistechnology.aurorapos2.feature_home.ui.receipt.ReceiptEvent
 import com.sistechnology.aurorapos2.feature_home.ui.receipt.components.BasketsRow
 import com.sistechnology.aurorapos2.feature_home.ui.receipt.components.DiscountBox
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -43,6 +48,8 @@ fun HomeScreen(
     val articlesState = viewModel.articlesState.value
     val receiptState = viewModel.receiptState.value
     val barDrawerState = viewModel.barDrawerState.value
+
+
 
 
 
@@ -67,15 +74,9 @@ fun HomeScreen(
     }
 
 
+
     Scaffold(
-        topBar = {
-            AppBar(
-                onMenuDrawerClick = {},
-                onLogoutClick = { viewModel.onBarDrawerEvent(BarDrawerEvent.ToggleLogoutDialog(true)) },
-                navController = navController,
-                onSettingsClick = {viewModel.onBarDrawerEvent(BarDrawerEvent.NavigateToSettings)}
-            )
-        },
+
         content = { padding ->
             Surface(modifier = Modifier.padding(10.dp)) {
                 Box(
@@ -115,7 +116,7 @@ fun HomeScreen(
                                             index,
                                             item
                                         )
-                                    );
+                                    )
                                     viewModel.onReceiptEvent(
                                         ReceiptEvent.ToggleEditReceiptItemBox(
                                             true
@@ -191,7 +192,7 @@ fun HomeScreen(
                                 onClick = {
                                     viewModel.onArticleEvent(
                                         ArticleEvent.SelectArticleGroup(it)
-                                    );
+                                    )
                                 },
                                 selectedArticleGroupId = articlesState.selectedArticleGroupId
                             )
@@ -200,7 +201,6 @@ fun HomeScreen(
                 }
             }
         })
-
 
 
     //Dialogs
@@ -212,26 +212,20 @@ fun HomeScreen(
                 id = R.string.receipt
             ),
             onConfirm = { viewModel.onReceiptEvent(ReceiptEvent.ClearReceipt) },
-            onDismiss = { viewModel.onReceiptEvent(ReceiptEvent.ToggleClearReceiptItemListDialog(false)) },
+            onDismiss = {
+                viewModel.onReceiptEvent(
+                    ReceiptEvent.ToggleClearReceiptItemListDialog(
+                        false
+                    )
+                )
+            },
             confirmButtonColor = colorResource(id = R.color.delete_red),
             cancelButtonText = stringResource(id = R.string.cancel),
             imageVector = Icons.Default.Delete,
             imageColor = colorResource(id = R.color.delete_red)
         )
     }
-    if (barDrawerState.showLogoutDialog) {
-        CustomDialog(
-            confirmButtonText = stringResource(id = R.string.ok),
-            messageText = stringResource(id = R.string.confirm_logout_text),
-            titleText = stringResource(id = R.string.logout),
-            onConfirm = { viewModel.onBarDrawerEvent(BarDrawerEvent.LogoutEvent) },
-            onDismiss = { viewModel.onBarDrawerEvent(BarDrawerEvent.ToggleLogoutDialog(false)) },
-            confirmButtonColor = colorResource(id = R.color.okay_button_green),
-            cancelButtonText = stringResource(id = R.string.cancel),
-            imageVector = Icons.Default.Logout
 
-        )
-    }
     if (articlesState.showEditArticleSuccessDialog) {
         CustomDialog(
             confirmButtonText = stringResource(id = R.string.ok),
@@ -243,9 +237,6 @@ fun HomeScreen(
             confirmButtonColor = colorResource(id = R.color.okay_button_green)
         )
     }
-
-
-
 
 
     //Edit Boxes
@@ -279,7 +270,7 @@ fun HomeScreen(
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             DiscountBox(
                 receiptInfo = receiptState.selectedReceiptInfo,
-                onSave = {viewModel.onReceiptEvent(ReceiptEvent.SaveChangesToReceipt)},
+                onSave = { viewModel.onReceiptEvent(ReceiptEvent.SaveChangesToReceipt) },
                 onDismiss = { viewModel.onReceiptEvent(ReceiptEvent.ToggleDiscountBox(false)) },
                 onDiscountTypeChanged = { viewModel.onReceiptEvent(ReceiptEvent.ReceiptDiscountTypeChanged) },
                 onDiscountEntered = {

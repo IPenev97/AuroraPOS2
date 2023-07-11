@@ -32,40 +32,15 @@ fun AppBar(
         backgroundColor = colorResource(id = R.color.logo_blue),
         elevation = 5.dp,
         navigationIcon = {
-            if (navBackStackEntry?.destination?.route.equals(Screen.HomeScreen.route)) {
-                IconButton(onClick = onMenuDrawerClick) {
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = stringResource(id = R.string.draw_menu),
-                        tint = Color.White
-                    )
-                }
-            } else {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(id = R.string.back),
-                        tint = Color.White
-                    )
-                }
+            IconButton(onClick = onMenuDrawerClick) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = stringResource(id = R.string.draw_menu),
+                    tint = Color.White
+                )
             }
         },
         actions = {
-            IconButton(onClick = onLogoutClick) {
-                Icon(
-                    imageVector = Icons.Filled.Logout,
-                    contentDescription = stringResource(id = R.string.logout),
-                    tint = Color.White
 
-                )
-            }
-            if(!navBackStackEntry?.destination?.route.equals(Screen.SettingsScreen.route))
-            IconButton(onClick = { onSettingsClick() }) {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Settings",
-                    tint = Color.White
-                )
-            }
         })
 }

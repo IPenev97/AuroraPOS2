@@ -87,20 +87,10 @@ fun UsersScreen(
 
 
 
-    Scaffold(
-        topBar = {
-            AppBar(
-                onMenuDrawerClick = { },
-                onLogoutClick = {},
-                navController = navController,
-                onSettingsClick = {}
-            )
-        },
-        content = { padding ->
             ConstraintLayout(
                 constraints, modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
+
             ) {
 
                 AnimatedVisibility(visible = state.logoVisibility) {
@@ -272,7 +262,4 @@ fun UsersScreen(
 
                 }
             }
-        })
-
-
 }

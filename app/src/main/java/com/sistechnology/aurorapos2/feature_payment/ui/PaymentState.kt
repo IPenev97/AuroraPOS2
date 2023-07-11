@@ -12,7 +12,7 @@ data class PaymentState(
     val paymentError: PaymentValidation? = null,
     val showAlreadyPayedDialog: Boolean = false,
     val showPrintingProgressDialog: Boolean = false,
-    val showPrintCompleteDialog: Boolean = false,
+    val showReceiptClosedDialog: Boolean = false,
     val showPrintErrorDialog: Boolean = false,
     val errorPrintMessage: Fp_Error? = null,
 ) {

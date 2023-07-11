@@ -101,8 +101,11 @@
     <string name="payment_credit">CREDIT</string>
     <string name="payment_card">CARD</string>
     <string name="printing_process">Printing receipt...</string>
-    <string name="receipt_printed">Receipt printed</string>
+    <string name="receipt_closed">Receipt successfully closed</string>
     <string name="error_printing_no_paper">Printer has no paper</string>
     <string name="error_printing_not_ready">Printing device is not ready to print</string>
     <string name="error_printing_no_battery">Printing device has no battery</string>
+    <string name="clients">Clients</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
 </resources>

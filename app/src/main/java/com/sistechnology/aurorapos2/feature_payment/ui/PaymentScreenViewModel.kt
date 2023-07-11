@@ -12,6 +12,8 @@ import com.sistechnology.aurorapos2.core.utils.SharedPreferencesHelper
 import com.sistechnology.aurorapos2.feature_home.ui.HomeScreenViewModel
 import com.sistechnology.aurorapos2.feature_payment.domain.models.Payment
 import com.sistechnology.aurorapos2.feature_payment.domain.use_case.PaymentUseCases
+import com.sistechnology.aurorapos2.feature_settings.domain.models.enums.FiscalDevice
+import com.sistechnology.aurorapos2.feature_settings.domain.models.enums.PrintingDevice
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -83,7 +85,7 @@ class PaymentScreenViewModel @Inject constructor(
                 _paymentState.value = paymentState.value.copy(showPrintErrorDialog = event.show)
             }
             is PaymentEvent.TogglePrintCompleteDialog -> {
-                _paymentState.value = paymentState.value.copy(showPrintCompleteDialog = event.show)
+                _paymentState.value = paymentState.value.copy(showReceiptClosedDialog = event.show)
             }
             PaymentEvent.FinishReceipt -> {
                 viewModelScope.launch{
@@ -108,19 +110,35 @@ class PaymentScreenViewModel @Inject constructor(
     }
 
     private fun makePayment() {
+        val test = sharedPrefs.getPrintingDeviceInfo()
 
-        Printer.currentBon.listPayments = enteredPaymentsList
-        Printer.currentBon.date = DateUtil.getCurrentDateAsString()
-        Printer.currentBon.time = DateUtil.getCurrentTimeAsString()
 
-             viewModelScope.launch(Dispatchers.IO){
-                 if(App.printer?.printFiscal()==true){
-                     _paymentState.value = paymentState.value.copy(showPrintingProgressDialog = false, showPrintCompleteDialog = true)
-                 }
-                 else {
-                     _paymentState.value = paymentState.value.copy(showPrintingProgressDialog = false, showPrintErrorDialog = true, errorPrintMessage = Printer.error)
-                 }
-             }
+
+        if(sharedPrefs.getPrintingDeviceInfo().fiscalDevice!=FiscalDevice.NoDevice) {
+            Printer.currentBon.listPayments = enteredPaymentsList
+            Printer.currentBon.date = DateUtil.getCurrentDateAsString()
+            Printer.currentBon.time = DateUtil.getCurrentTimeAsString()
+
+            viewModelScope.launch(Dispatchers.IO) {
+                if (App.printer?.printFiscal() == true) {
+                    _paymentState.value = paymentState.value.copy(
+                        showPrintingProgressDialog = false,
+                        showReceiptClosedDialog = true
+                    )
+                } else {
+                    _paymentState.value = paymentState.value.copy(
+                        showPrintingProgressDialog = false,
+                        showPrintErrorDialog = true,
+                        errorPrintMessage = Printer.error
+                    )
+                }
+            }
+        } else {
+            _paymentState.value = paymentState.value.copy(
+                showPrintingProgressDialog = false,
+                showReceiptClosedDialog = true
+            )
+        }
 
     }
 

@@ -80,6 +80,9 @@ class UsbDeviceHandler {
                                         FiscalDevice.Daisy -> PrinterFunctions.setCommandSetFP(
                                             CommandSetFP()
                                         )
+                                        FiscalDevice.Datecs -> PrinterFunctions.setCommandSetFP(
+                                            CommandSetFP()
+                                        )
                                         else -> {PrinterFunctions.setCommandSetFP(null)}
                                     }
                                     PrinterFunctions.getCommandSetFP().initComm()
@@ -128,6 +131,8 @@ class UsbDeviceHandler {
         fun checkDeviceFiscalPrinter(device: UsbDevice?): FiscalDevice {
             if (device?.vendorId == DAISY_VID || device?.productId == DAISY_PID) {
                 return FiscalDevice.Daisy
+            } else if(device?.vendorId == FTDI_USB_VID && device?.productId == DATECS_FTDI_PID){
+                return FiscalDevice.Datecs
             }
 
             return FiscalDevice.NoDevice

@@ -149,6 +149,8 @@ class MainActivity : ComponentActivity() {
                                     when (fiscalDevice) {
                                         FiscalDevice.Daisy -> usbStateChangeDialogMessage =
                                             applicationContext.getString(R.string.fiscal_printer_attached_daisy)
+                                        FiscalDevice.Datecs -> usbStateChangeDialogMessage =
+                                            applicationContext.getString(R.string.fiscal_printer_attached_datecs)
                                         else -> {}
                                     }
                                     showUsbStateChangedDialog = true

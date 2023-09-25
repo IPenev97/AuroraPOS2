@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.sistechnology.aurorapos2.core.data.local.Database
 import com.sistechnology.aurorapos2.feature_authentication.data.local.dao.UserDao
 import com.sistechnology.aurorapos2.feature_authentication.data.local.dao.UserTypeDao
+import com.sistechnology.aurorapos2.feature_clients.data.local.dao.ClientDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleGroupDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.VatGroupDao
@@ -85,6 +86,14 @@ object DatabaseModule {
     fun provideTerminalParameterDao(database: Database) : TerminalParameterDao{
         return database.terminalParameterDao()
     }
+
+    @Singleton
+    @Provides
+    fun provideClientDao(database: Database) : ClientDao{
+        return database.clientDao()
+    }
+
+
 
 
 

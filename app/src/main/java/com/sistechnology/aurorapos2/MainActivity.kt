@@ -35,6 +35,7 @@ import com.sistechnology.aurorapos2.core.ui.components.*
 import com.sistechnology.aurorapos2.core.ui.theme.AuroraPOS2Theme
 import com.sistechnology.aurorapos2.core.utils.SharedPreferencesHelper
 import com.sistechnology.aurorapos2.feature_authentication.ui.users.UsersScreen
+import com.sistechnology.aurorapos2.feature_clients.ui.ClientsScreen
 import com.sistechnology.aurorapos2.feature_home.ui.HomeScreen
 import com.sistechnology.aurorapos2.feature_home.ui.bar_drawer.BarDrawerEvent
 import com.sistechnology.aurorapos2.feature_payment.ui.PaymentScreen
@@ -103,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                     title = stringResource(id = R.string.clients),
                                     contentDescription = "ClientsButton",
                                     icon = Icons.Default.Person,
-                                    screen = Screen.PaymentScreen
+                                    screen = Screen.ClientsScreen
                                 ),
                                 MenuItem(
                                     id = "Settings",
@@ -234,6 +235,10 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(route = Screen.SettingsScreen.route) {
                                 SettingsScreen(navController = navController)
+                            }
+                            composable(route = Screen.ClientsScreen.route){
+                                ClientsScreen(navController = navController)
+
                             }
                         }
                     }

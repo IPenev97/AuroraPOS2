@@ -3,6 +3,9 @@ package com.sistechnology.aurorapos2.di.modules
 import com.sistechnology.aurorapos2.core.utils.SharedPreferencesHelper
 import com.sistechnology.aurorapos2.feature_authentication.domain.repositories.UserRepository
 import com.sistechnology.aurorapos2.feature_authentication.domain.use_case.users.*
+import com.sistechnology.aurorapos2.feature_clients.domain.repositories.ClientRepository
+import com.sistechnology.aurorapos2.feature_clients.domain.use_case.ClientUseCases
+import com.sistechnology.aurorapos2.feature_clients.domain.use_case.GetAllClientsUseCase
 import com.sistechnology.aurorapos2.feature_home.domain.repositories.ArticleRepository
 import com.sistechnology.aurorapos2.feature_home.domain.repositories.ReceiptRepository
 import com.sistechnology.aurorapos2.feature_home.domain.use_case.articles.*
@@ -99,5 +102,13 @@ object UseCaseModule {
                 sharedPreferencesHelper
             )
         )
+    }
+
+    @Singleton
+    @Provides
+    fun provideClientUseCases(
+        clientRepository: ClientRepository
+    ) : ClientUseCases {
+        return ClientUseCases(getAllClientsUseCase = GetAllClientsUseCase(clientRepository))
     }
 }

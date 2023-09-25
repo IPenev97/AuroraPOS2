@@ -34,6 +34,7 @@ class PaymentScreenViewModel @Inject constructor(
     private val _paymentState = mutableStateOf(PaymentState())
     val paymentState: State<PaymentState> = _paymentState
 
+
     private val _enteredPaymentsList = mutableStateListOf<Payment>()
     val enteredPaymentsList: List<Payment> = _enteredPaymentsList
 
@@ -109,8 +110,10 @@ class PaymentScreenViewModel @Inject constructor(
         }
     }
 
+
     private fun makePayment() {
         val test = sharedPrefs.getPrintingDeviceInfo()
+
 
 
 
@@ -143,7 +146,7 @@ class PaymentScreenViewModel @Inject constructor(
     }
 
     private fun getPaymentTypes() {
-
+        getPaymentTypeJob?.cancel()
         getPaymentTypeJob = paymentUseCases.getPaymentTypes().onEach { paymentTypes ->
             _paymentState.value = paymentState.value.copy(paymentTypeList = paymentTypes)
         }.launchIn(viewModelScope)

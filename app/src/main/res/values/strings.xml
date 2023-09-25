@@ -109,4 +109,6 @@
     <string name="home">Home</string>
     <string name="settings">Settings</string>
     <string name="fiscal_printer_attached_datecs">Datecs fiscal printer has been attached to the device</string>
+    <string name="vatNum">VAT Number</string>
+    <string name="regNum">Registration Number</string>
 </resources>

@@ -115,6 +115,9 @@ class PresetDataHelper(
         )
         terminalParameterRepository.saveTerminalParameter(TerminalParameterEntity())
 
+
+
+
     }
 
 }

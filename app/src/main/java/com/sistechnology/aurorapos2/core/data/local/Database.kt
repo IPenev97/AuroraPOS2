@@ -6,6 +6,8 @@ import com.sistechnology.aurorapos2.feature_authentication.data.local.dao.UserDa
 import com.sistechnology.aurorapos2.feature_authentication.data.local.dao.UserTypeDao
 import com.sistechnology.aurorapos2.feature_authentication.data.local.entities.UserEntity
 import com.sistechnology.aurorapos2.feature_authentication.data.local.entities.UserTypeEntity
+import com.sistechnology.aurorapos2.feature_clients.data.local.dao.ClientDao
+import com.sistechnology.aurorapos2.feature_clients.data.local.entities.ClientEntity
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleGroupDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.VatGroupDao
@@ -31,9 +33,10 @@ import com.sistechnology.aurorapos2.feature_settings.data.local.entities.Termina
         ParkedReceiptEntity::class,
         ReceiptItemEntity::class,
         VatGroupEntity::class,
-        TerminalParameterEntity::class
+        TerminalParameterEntity::class,
+        ClientEntity::class
     ],
-    version = 22,
+    version = 23,
     exportSchema = true
 )
 abstract class Database : RoomDatabase() {
@@ -46,6 +49,7 @@ abstract class Database : RoomDatabase() {
     abstract fun receiptItemDao(): ReceiptItemDao
     abstract fun vatGroupDao(): VatGroupDao
     abstract fun terminalParameterDao(): TerminalParameterDao
+    abstract fun clientDao(): ClientDao
 
     companion object {
         val DATABASE_NAME: String = "aurora.db"

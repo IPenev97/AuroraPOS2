@@ -274,7 +274,8 @@ public class CommandSetFP extends CommandSet
         return true;
     }
 
-    public boolean getError() { return statusFP.getError(); }
+    public boolean getError() {
+        return statusFP.getError(); }
     public String getStatusText() { return statusFP.getStatusText(); }
 
 
@@ -520,6 +521,7 @@ public class CommandSetFP extends CommandSet
         double dSubtotalDiscount = 0;
 
         if(fpGetStatus()) {
+
             if (getError())
             {
                 if(!getStatusText().equals("")) {

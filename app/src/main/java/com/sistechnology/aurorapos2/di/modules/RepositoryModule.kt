@@ -5,6 +5,9 @@ import com.sistechnology.aurorapos2.feature_authentication.data.local.dao.UserDa
 import com.sistechnology.aurorapos2.feature_authentication.data.local.dao.UserTypeDao
 import com.sistechnology.aurorapos2.feature_authentication.data.repositories.UserRepositoryImpl
 import com.sistechnology.aurorapos2.feature_authentication.domain.repositories.UserRepository
+import com.sistechnology.aurorapos2.feature_clients.data.local.dao.ClientDao
+import com.sistechnology.aurorapos2.feature_clients.data.repositories.ClientRepositoryImpl
+import com.sistechnology.aurorapos2.feature_clients.domain.repositories.ClientRepository
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.ArticleGroupDao
 import com.sistechnology.aurorapos2.feature_home.data.local.dao.article.VatGroupDao
@@ -57,6 +60,12 @@ object RepositoryModule {
     @Provides
     fun provideTerminalParameterRepository(terminalParameterDao: TerminalParameterDao) : TerminalParameterRepository {
         return TerminalParameterRepositoryImpl(terminalParameterDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideClientRepository(clientDao: ClientDao) : ClientRepository {
+        return ClientRepositoryImpl(clientDao)
     }
 
 

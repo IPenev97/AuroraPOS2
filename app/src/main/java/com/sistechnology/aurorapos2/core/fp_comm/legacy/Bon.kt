@@ -2,6 +2,7 @@ package com.sistechnology.aurorapos2.core.fp_comm.legacy
 
 import com.sistechnology.aurorapos2.core.fp_comm.legacy.utils.BonPrintData
 import com.sistechnology.aurorapos2.core.fp_comm.legacy.utils.ClientDataProvider
+import com.sistechnology.aurorapos2.feature_clients.domain.models.Client
 import com.sistechnology.aurorapos2.feature_home.domain.models.receipt.ReceiptItem
 import com.sistechnology.aurorapos2.feature_payment.domain.models.Payment
 
@@ -22,6 +23,8 @@ data class Bon(
     var listArticles: List<ReceiptItem> = emptyList(),
     var listPayments: List<Payment> = emptyList(),
     var flagPrinted: Boolean = false,
+
+
 
 ) {
      fun isFiscal() : Boolean {

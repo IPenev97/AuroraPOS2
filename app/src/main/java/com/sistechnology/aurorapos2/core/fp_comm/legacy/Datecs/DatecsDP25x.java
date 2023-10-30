@@ -4,6 +4,7 @@ import android.util.Log;
 
 
 import com.sistechnology.aurorapos2.App;
+import com.sistechnology.aurorapos2.core.fp_comm.Printer;
 import com.sistechnology.aurorapos2.core.fp_comm.legacy.CommandSetFP;
 import com.sistechnology.aurorapos2.core.fp_comm.legacy.PrinterFunctions;
 import com.sistechnology.aurorapos2.core.fp_comm.legacy.utils.CommonFn;
@@ -521,48 +522,48 @@ public class DatecsDP25x extends CommandSetFP
     @Override
     public boolean fpCloseReceipt(boolean fFiscal)
     {
-//        if(App.getCtrl().getCurrentPrintBon().client != null && client != null)
-//        {
-//            // 39h (57) ПЕЧАТ НА ИНФОРМАЦИЯ ЗА КЛИЕНТА
-//            // Данни: <EIK><Tab><EIKType>[<Tab><Seller>[<Tab><Receiver>[<Tab><Client>[<Tab><TaxNo>[<Tab><Address>]]]]]
-//            // Отговор: <ErrCode>
-//            //  Задължителни параметри:
-//            //EIK ЕИК номер на купувача. Между 9 и 14 символа
-//            //Tab Табулация (09H). Разделител между параметрите
-//            //EIKType ЕИК тип. 0 - Булстат, 1 - ЕГН, 2 - ЛНЧ, 3 - Сл. номер
-//            //
-//            // 4 символа.
-//            //  Address Адрес на купувача. До два реда текст максимално от 36 символа, разделени с LF(0AH).
-//
-//            boolean res = false;
-//            fpError = 0;
-//            if (noCommSetError())
-//                return false;
-//
-//            String data = "";
-//            String vatNumber = client.getVATNumber() != null ? client.getVATNumber() : "";
-//            if(vatNumber.equals("") || vatNumber.length() < 10)
-//                vatNumber = "BG" + client.getRegNo();
-//
-//            if(vatNumber.length() > 14)
-//                vatNumber = vatNumber.substring(0,14);
-//
-//
-//            if(client.getEikType() == 1 && client.getRegNo().length() != 10)
-//                if(client.getRegNo().length() == 9 || client.getRegNo().length() == 13)
-//                    client.setEikType(0);
-//                else
-//                    client.setEikType(3);
-//
-//            // {Seller}<SEP>{Receiver}<SEP>{Buyer}<SEP>{Address1}<SEP>{Address2}<SEP>{TypeTAXN}<SEP>{TAXN}<SEP>{VATN}<SEP>
-//            data +=  "\t" + "\t" + client.getName() + "\t" + getValidAddress() + "\t" + client.getEikType() + "\t" +
-//                    client.getRegNo() + "\t" + vatNumber + "\t";
-//
-//            if (comm.request((byte) 0x39, data))
-//                res = analyzeAnswer();
-//
-//
-//        }
+        if(Printer.Companion.getCurrentBon().getClient() != null && client != null)
+        {
+            // 39h (57) ПЕЧАТ НА ИНФОРМАЦИЯ ЗА КЛИЕНТА
+            // Данни: <EIK><Tab><EIKType>[<Tab><Seller>[<Tab><Receiver>[<Tab><Client>[<Tab><TaxNo>[<Tab><Address>]]]]]
+            // Отговор: <ErrCode>
+            //  Задължителни параметри:
+            //EIK ЕИК номер на купувача. Между 9 и 14 символа
+            //Tab Табулация (09H). Разделител между параметрите
+            //EIKType ЕИК тип. 0 - Булстат, 1 - ЕГН, 2 - ЛНЧ, 3 - Сл. номер
+            //
+            // 4 символа.
+            //  Address Адрес на купувача. До два реда текст максимално от 36 символа, разделени с LF(0AH).
+
+            boolean res = false;
+            fpError = 0;
+            if (noCommSetError())
+                return false;
+
+            String data = "";
+            String vatNumber = client.getVATNumber() != null ? client.getVATNumber() : "";
+            if(vatNumber.equals("") || vatNumber.length() < 10)
+                vatNumber = "BG" + client.getRegNo();
+
+            if(vatNumber.length() > 14)
+                vatNumber = vatNumber.substring(0,14);
+
+
+            if(client.getEikType() == 1 && client.getRegNo().length() != 10)
+                if(client.getRegNo().length() == 9 || client.getRegNo().length() == 13)
+                    client.setEikType(0);
+                else
+                    client.setEikType(3);
+
+            // {Seller}<SEP>{Receiver}<SEP>{Buyer}<SEP>{Address1}<SEP>{Address2}<SEP>{TypeTAXN}<SEP>{TAXN}<SEP>{VATN}<SEP>
+            data +=  "\t" + "\t" + client.getName() + "\t" + getValidAddress() + "\t" + client.getEikType() + "\t" +
+                    client.getRegNo() + "\t" + vatNumber + "\t";
+
+            if (comm.request((byte) 0x39, data))
+                res = analyzeAnswer();
+
+
+        }
 
         return super.fpCloseReceipt(fFiscal);
     }
